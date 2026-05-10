@@ -1,0 +1,268 @@
+import request from '@/lib/request'
+import { apiConfig } from '@/config/api'
+
+/**
+ * 压缩图片函数
+ */
+const compressImage = (file: File, maxSizeMB = 0.8, quality = 0.4): Promise<File> => {
+  return new Promise((resolve) => {
+    // 对于GIF文件，不进行压缩，直接返回原文件
+    if (file.type === 'image/gif') {
+      resolve(file)
+      return
+    }
+
+    // 对于800KB以下的文件不进行压缩
+    if (file.size <= maxSizeMB * 1024 * 1024) {
+      resolve(file)
+      return
+    }
+
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+    const img = new Image()
+
+    img.onload = () => {
+      // 超过800KB的图片使用强力压缩
+      const compressQuality = 0.4
+      const maxDimension = 1200
+
+      // 计算新的尺寸
+      let { width, height } = img
+      if (width > maxDimension || height > maxDimension) {
+        const ratio = Math.min(maxDimension / width, maxDimension / height)
+        width = Math.floor(width * ratio)
+        height = Math.floor(height * ratio)
+      }
+
+      canvas.width = width
+      canvas.height = height
+
+      // 绘制并压缩
+      ctx!.drawImage(img, 0, 0, width, height)
+      canvas.toBlob(
+        (blob) => {
+          const compressedFile = new File([blob!], file.name, {
+            type: file.type,
+            lastModified: Date.now(),
+          })
+
+          resolve(compressedFile)
+        },
+        file.type,
+        compressQuality
+      )
+    }
+
+    img.onerror = () => resolve(file) // 加载失败，返回原文件
+    img.src = URL.createObjectURL(file)
+  })
+}
+
+interface UploadOptions {
+  filename?: string
+}
+
+interface BatchUploadOptions {
+  maxCount?: number
+  onProgress?: (progress: { current: number; total: number; percent: number }) => void
+  onSingleComplete?: (info: {
+    index: number
+    file: File
+    result: any
+    success: boolean
+    error?: string
+  }) => void
+}
+
+export async function uploadImage(file: File, options: UploadOptions = {}) {
+  try {
+    if (!file) throw new Error('请选择要上传的文件')
+    if (file instanceof File && !file.type.startsWith('image/')) throw new Error('请选择图片文件')
+    if (file.size > apiConfig.upload.image.maxFileSize)
+      throw new Error(`图片大小不能超过${formatFileSize(apiConfig.upload.image.maxFileSize)}`)
+
+    // 压缩图片
+    const compressedFile = await compressImage(file)
+
+    const formData = new FormData()
+    const filename = options.filename || (compressedFile instanceof File ? compressedFile.name : 'image.png')
+    formData.append('file', compressedFile, filename)
+
+    // 使用request实例上传
+    const result: any = await request.post('/upload/single', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+
+    if (!result.success) throw new Error(result.message || '上传失败')
+
+    return {
+      success: true,
+      data: { url: result.data.url, originalName: filename, size: file.size },
+      message: '上传成功',
+    }
+  } catch (error: any) {
+    let errorMessage = '上传失败，请重试'
+
+    if (error.name === 'AbortError') {
+      errorMessage = '上传超时，请检查网络连接或稍后重试'
+    } else if (error.message) {
+      errorMessage = error.message
+    }
+
+    return {
+      success: false,
+      data: null,
+      message: errorMessage,
+    }
+  }
+}
+
+export async function uploadImages(files: File[] | FileList, options: BatchUploadOptions = {}) {
+  try {
+    const { maxCount = apiConfig.upload.image.maxCount, onProgress, onSingleComplete } = options
+    const fileArray = Array.from(files)
+
+    if (fileArray.length === 0) throw new Error('请选择要上传的文件')
+    if (fileArray.length > maxCount) throw new Error(`最多只能上传${maxCount}张图片`)
+
+    const results: any[] = []
+    const errors: Array<{ file: string; error: string }> = []
+
+    for (let i = 0; i < fileArray.length; i++) {
+      const file = fileArray[i]
+
+      try {
+        onProgress?.({
+          current: i + 1,
+          total: fileArray.length,
+          percent: Math.round(((i + 1) / fileArray.length) * 100),
+        })
+
+        const result = await uploadImage(file)
+
+        if (result.success) {
+          results.push(result.data)
+          onSingleComplete?.({ index: i, file, result: result.data, success: true })
+        } else {
+          errors.push({ file: file.name, error: result.message })
+          onSingleComplete?.({ index: i, file, result: null, success: false, error: result.message })
+        }
+      } catch (error: any) {
+        errors.push({ file: file.name, error: error.message })
+        onSingleComplete?.({ index: i, file, result: null, success: false, error: error.message })
+      }
+    }
+
+    return {
+      success: results.length > 0,
+      data: {
+        uploaded: results,
+        errors,
+        total: fileArray.length,
+        successCount: results.length,
+        errorCount: errors.length,
+      },
+      message:
+        errors.length === 0
+          ? '所有图片上传成功'
+          : `${results.length}张上传成功，${errors.length}张失败`,
+    }
+  } catch (error: any) {
+    return {
+      success: false,
+      data: null,
+      message: error.message || '批量上传失败，请重试',
+    }
+  }
+}
+
+export async function uploadCroppedImage(blob: Blob, options: UploadOptions = {}) {
+  try {
+    if (!blob) throw new Error('请选择要上传的文件')
+
+    const formData = new FormData()
+    const filename = options.filename || 'avatar.png'
+    formData.append('file', blob, filename)
+
+    // 使用request实例上传
+    const result: any = await request.post('/upload/single', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+
+    if (result.success) {
+      return {
+        success: true,
+        data: { url: result.data.url, originalName: filename, size: blob.size },
+        message: '上传成功',
+      }
+    } else {
+      throw new Error(result.message || '上传失败')
+    }
+  } catch (error: any) {
+    console.error('头像上传失败:', error)
+    return {
+      success: false,
+      data: null,
+      message: error.message || '上传失败，请重试',
+    }
+  }
+}
+
+interface ValidateImageOptions {
+  maxSize?: number
+  allowedTypes?: string[]
+}
+
+export function validateImageFile(file: File, options: ValidateImageOptions = {}) {
+  const {
+    maxSize = apiConfig.upload.image.maxFileSize,
+    allowedTypes = apiConfig.upload.image.allowedTypes,
+  } = options
+
+  if (!file) return { valid: false, error: '请选择文件' }
+  if (!file.type.startsWith('image/')) return { valid: false, error: '请选择图片文件' }
+  if (allowedTypes.length > 0 && !allowedTypes.includes(file.type)) {
+    return { valid: false, error: `不支持的文件类型` }
+  }
+  if (file.size > maxSize) {
+    return { valid: false, error: `文件大小不能超过${formatFileSize(maxSize)}` }
+  }
+  return { valid: true, error: null }
+}
+
+export function formatFileSize(bytes: number): string {
+  if (bytes === 0) return '0 B'
+  const k = 1024
+  const sizes = ['B', 'KB', 'MB', 'GB']
+  const i = Math.floor(Math.log(bytes) / Math.log(k))
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+}
+
+export function createImagePreview(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    if (!file || !file.type.startsWith('image/')) {
+      reject(new Error('不是有效的图片文件'))
+      return
+    }
+    const reader = new FileReader()
+    reader.onload = (e) => resolve(e.target!.result as string)
+    reader.onerror = () => reject(new Error('读取文件失败'))
+    reader.readAsDataURL(file)
+  })
+}
+
+export const imageUploadApi = {
+  uploadImage,
+  uploadImages,
+  uploadCroppedImage,
+  validateImageFile,
+  formatFileSize,
+  createImagePreview,
+}
+
+export default imageUploadApi

@@ -1,0 +1,354 @@
+/* ================================================================
+   ImageUploadModal styles
+   Ported from 知舟 Vue3, scoped styles flattened
+   ================================================================ */
+
+.image-upload-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--overlay-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.image-upload-modal {
+  background: var(--bg-color-primary);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 600px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.image-upload-modal .image-upload-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border-color-primary);
+  background: var(--bg-color-primary);
+}
+
+.image-upload-modal .image-upload-header h4 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-color-primary);
+}
+
+.image-upload-modal .close-btn {
+  width: 30px;
+  height: 30px;
+  background: var(--bg-color-secondary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  color: var(--text-color-primary);
+  transition: all 0.2s ease;
+}
+
+.image-upload-modal .close-btn:hover {
+  color: var(--text-color-secondary);
+  transform: scale(1.1);
+  transition: all 0.2s ease;
+}
+
+.image-upload-modal .image-upload-content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.image-upload-modal .image-upload-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 20px 24px;
+  border-top: 1px solid var(--border-color-primary);
+  background: var(--bg-color-primary);
+}
+
+.image-upload-modal .cancel-btn,
+.image-upload-modal .confirm-btn {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+}
+
+.image-upload-modal .cancel-btn {
+  background-color: transparent;
+  color: var(--text-color-secondary);
+  border: 1px solid var(--border-color-primary);
+}
+
+.image-upload-modal .cancel-btn:hover {
+  background-color: var(--bg-color-secondary);
+}
+
+.image-upload-modal .confirm-btn {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+}
+
+.image-upload-modal .confirm-btn:hover:not(:disabled) {
+  background-color: var(--primary-color-dark);
+}
+
+.image-upload-modal .confirm-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* MultiImageUpload styles inside modal */
+.image-upload-modal .multi-image-upload {
+  width: 100%;
+}
+
+.image-upload-modal .upload-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.image-upload-modal .image-item,
+.image-upload-modal .upload-item {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.image-upload-modal .image-item {
+  transition: all 0.2s ease;
+  cursor: move;
+  user-select: none;
+}
+
+.image-upload-modal .image-item:hover {
+  border-color: var(--primary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.image-upload-modal .image-item.dragging {
+  opacity: 0.5;
+  transform: scale(1.05) rotate(5deg);
+  z-index: 1000;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.image-upload-modal .image-item.touch-dragging {
+  opacity: 0.8;
+  transform: scale(1.6) rotate(3deg);
+  z-index: 1000;
+}
+
+.image-upload-modal .image-item.long-pressing {
+  transform: scale(0.95);
+}
+
+.image-upload-modal .image-preview {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.image-upload-modal .image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.image-upload-modal .image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--overlay-bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.image-upload-modal .image-preview:hover .image-overlay {
+  opacity: 1;
+}
+
+.image-upload-modal .image-actions {
+  display: flex;
+  gap: 8px;
+  align-self: flex-end;
+}
+
+.image-upload-modal .action-btn {
+  background: rgba(255, 255, 255, 0.814);
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  opacity: 0.5;
+  padding: 0;
+  color: var(--text-color-primary);
+}
+
+.image-upload-modal .remove-btn:hover:not(:disabled) {
+  opacity: 1;
+}
+
+.image-upload-modal .action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.image-upload-modal .action-btn svg {
+  width: 12px;
+  height: 12px;
+}
+
+.image-upload-modal .image-index {
+  background: rgba(0, 0, 0, 0.534);
+  color: white;
+  border-radius: 12px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: bold;
+  align-self: flex-start;
+}
+
+.image-upload-modal .upload-item {
+  border: 2px dashed var(--border-color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--bg-color-primary);
+}
+
+.image-upload-modal .upload-item:hover {
+  border-color: var(--primary-color);
+}
+
+.image-upload-modal .upload-item.uploading {
+  border-color: var(--primary-color);
+  background-color: rgba(255, 71, 87, 0.05);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.image-upload-modal .upload-icon.uploading {
+  animation: ium-spin 1s linear infinite;
+  color: var(--primary-color);
+}
+
+.image-upload-modal .upload-placeholder {
+  text-align: center;
+  color: var(--text-color-secondary);
+}
+
+.image-upload-modal .upload-icon {
+  width: 24px;
+  height: 24px;
+  margin-bottom: 5px;
+  color: var(--text-color-secondary);
+}
+
+.image-upload-modal .upload-placeholder p {
+  margin: 2px 0;
+  font-size: 12px;
+}
+
+.image-upload-modal .upload-hint {
+  color: var(--text-color-secondary);
+  font-size: 10px !important;
+}
+
+.image-upload-modal .error-message {
+  color: var(--primary-color);
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+.image-upload-modal .upload-tips {
+  font-size: 12px;
+  color: var(--text-color-secondary);
+  line-height: 1.4;
+}
+
+.image-upload-modal .upload-tips p {
+  margin: 2px 0;
+}
+
+@keyframes ium-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+  .image-upload-modal-overlay {
+    padding: 10px;
+  }
+  .image-upload-modal {
+    max-height: 90vh;
+  }
+  .image-upload-modal .image-upload-header,
+  .image-upload-modal .image-upload-footer {
+    padding: 16px 20px;
+  }
+  .image-upload-modal .image-upload-content {
+    padding: 20px;
+  }
+  .image-upload-modal .image-item {
+    touch-action: pan-y;
+  }
+  .image-upload-modal .image-item.touch-dragging {
+    touch-action: none;
+    transform: rotate(2deg);
+  }
+  .image-upload-modal .image-overlay {
+    pointer-events: none;
+  }
+  .image-upload-modal .image-overlay .action-btn {
+    pointer-events: auto;
+  }
+  .image-upload-modal .upload-grid {
+    user-select: none;
+  }
+  .image-upload-modal .image-item.long-pressing {
+    transform: scale(0.9);
+  }
+}

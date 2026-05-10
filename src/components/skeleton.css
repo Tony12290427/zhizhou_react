@@ -1,0 +1,591 @@
+/* ================================================================
+   BaseSkeleton + SkeletonList styles
+   Ported from 知舟 Vue3, scoped styles flattened
+   ================================================================ */
+
+.skeleton-wrapper {
+  --skeleton-bg: var(--bg-color-secondary);
+  --skeleton-highlight: var(--bg-color-tertiary);
+}
+
+/* Base skeleton element styles */
+.skeleton-avatar,
+.skeleton-line,
+.skeleton-image,
+.skeleton-button {
+  background: linear-gradient(90deg, var(--skeleton-bg) 25%, var(--skeleton-highlight) 37%, var(--skeleton-bg) 63%);
+  background-size: 200% 100%;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-avatar {
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.skeleton-button {
+  width: 72px;
+  height: 32px;
+  border-radius: 20px;
+  margin-left: 12px;
+  flex-shrink: 0;
+}
+
+.skeleton-image {
+  width: 100%;
+  border-radius: 10px;
+  background-size: 200px 100%;
+  min-height: 300px;
+}
+
+/* Animation effects */
+.skeleton-wrapper:not(.no-animation) .skeleton-avatar,
+.skeleton-wrapper:not(.no-animation) .skeleton-line,
+.skeleton-wrapper:not(.no-animation) .skeleton-image,
+.skeleton-wrapper:not(.no-animation) .skeleton-button {
+  animation: skeleton-shimmer 1.5s infinite;
+}
+
+.skeleton-wrapper.pulse-animation .skeleton-avatar,
+.skeleton-wrapper.pulse-animation .skeleton-line,
+.skeleton-wrapper.pulse-animation .skeleton-image,
+.skeleton-wrapper.pulse-animation .skeleton-button {
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+/* User card layout */
+.skeleton-user-card {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color-primary);
+  background: var(--bg-color-primary);
+}
+
+.skeleton-user-card .skeleton-avatar {
+  margin-right: 12px;
+}
+
+.skeleton-user-card .skeleton-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.skeleton-user-card .skeleton-stats {
+  display: flex;
+  gap: 16px;
+}
+
+/* Image card layout */
+.skeleton-image-card {
+  width: 100%;
+  box-sizing: border-box;
+  background-color: var(--bg-color-primary);
+  border-radius: 10px;
+  overflow: hidden;
+  padding: 0;
+}
+
+.skeleton-image-card .skeleton-footer {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  gap: 8px;
+}
+
+/* Simple user item layout */
+.skeleton-user-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  height: 64px;
+  box-sizing: border-box;
+}
+
+.skeleton-user-item .skeleton-avatar {
+  margin-right: 12px;
+}
+
+.skeleton-user-item .skeleton-info {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Animations */
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+@keyframes skeleton-pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .skeleton-user-card {
+    padding: 12px;
+  }
+
+  .skeleton-user-card .skeleton-avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .skeleton-user-card .skeleton-stats {
+    gap: 12px;
+  }
+
+  .skeleton-button {
+    width: 64px;
+    height: 28px;
+  }
+}
+
+/* ================================================================
+   SkeletonList layout styles
+   ================================================================ */
+
+.skeleton-list {
+  padding: 0;
+  margin: 0;
+}
+
+/* Vertical layout (default) */
+.skeleton-list:not(.grid-layout):not(.waterfall-layout) {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Grid layout */
+.skeleton-list.grid-layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+/* Waterfall layout */
+.skeleton-list.waterfall-layout {
+  column-count: 2;
+  column-gap: 10px;
+  list-style: none;
+}
+
+.skeleton-list.waterfall-layout > * {
+  break-inside: avoid;
+  margin-bottom: 10px;
+}
+
+@media (min-width: 960px) {
+  .skeleton-list.waterfall-layout {
+    column-count: 4;
+    column-gap: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .skeleton-list.grid-layout {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+  }
+
+  .skeleton-list:not(.grid-layout):not(.waterfall-layout) {
+    gap: 8px;
+  }
+}
+
+/* ================================================================
+   SimpleSpinner styles
+   ================================================================ */
+
+.simple-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.simple-spinner-icon {
+  animation: simpleRotate 1s linear infinite;
+}
+
+@keyframes simpleRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* ================================================================
+   LoadingSpinner styles
+   ================================================================ */
+
+.loading-spinner {
+  padding: 5px 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: slideDown var(--animation-duration, 1.5s) ease-in-out;
+  width: 100%;
+  overflow-x: hidden;
+  position: relative;
+  top: 18px;
+  z-index: 101;
+  box-sizing: border-box;
+}
+
+.spinner-icon {
+  color: var(--text-color-primary);
+  animation: spinThreeStage var(--animation-duration, 1.5s) ease-in-out;
+}
+
+@keyframes slideDown {
+  0% {
+    transform: scale(0.7) translateY(-50%);
+    opacity: 0.7;
+  }
+  33.33% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+  66.66% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.7) translateY(-50%);
+    opacity: 0.7;
+  }
+}
+
+@keyframes spinThreeStage {
+  0% {
+    transform: rotate(0deg);
+  }
+  33.33% {
+    transform: rotate(360deg);
+  }
+  66.66% {
+    transform: rotate(720deg);
+  }
+  100% {
+    transform: rotate(1080deg);
+  }
+}
+
+/* ================================================================
+   VerifiedBadge styles
+   ================================================================ */
+
+.verified-badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--primary-color);
+  border-radius: 50%;
+  margin-left: 4px;
+  flex-shrink: 0;
+  cursor: pointer;
+  color: #fff;
+  padding: 2px;
+}
+
+.verified-badge svg {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.verified-badge--mini {
+  width: 7px;
+  height: 7px;
+  margin-left: 0px;
+}
+
+.verified-badge--small {
+  width: 10px;
+  height: 10px;
+  margin-left: 0px;
+}
+
+.verified-badge--medium {
+  width: 13px;
+  height: 13px;
+  margin-left: 0px;
+}
+
+.verified-badge--large {
+  width: 16px;
+  height: 16px;
+}
+
+.verified-badge--official {
+  background-image: linear-gradient(90deg,
+      transparent 0%,
+      transparent 40%,
+      rgba(255, 255, 255, 0.3) 50%,
+      transparent 60%,
+      transparent 100%);
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  animation: reflect 3s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+@keyframes reflect {
+  0% {
+    background-position: -200% center;
+  }
+  50% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.verified-badge--personal {
+  background-color: var(--secondary-color);
+}
+
+.verified-badge .tooltip {
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  transform: translateX(-50%);
+  margin-bottom: 8px;
+  background: var(--bg-color-primary);
+  color: var(--text-color-primary);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--border-color-primary);
+  z-index: 200;
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .verified-badge .tooltip {
+    display: none;
+  }
+}
+
+.verified-badge:hover .tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ================================================================
+   ConfirmDialog styles
+   ================================================================ */
+
+.confirm-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--overlay-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.confirm-dialog {
+  background: var(--bg-color-primary);
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%;
+  max-height: 90vh;
+  overflow: hidden;
+  border: 1px solid var(--border-color-primary);
+}
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border-color-primary);
+}
+
+.dialog-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-color-primary);
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--text-color-secondary);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.close-btn:hover {
+  color: var(--text-color-primary);
+}
+
+.dialog-content {
+  padding: 24px;
+}
+
+.dialog-message {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text-color-primary);
+  white-space: pre-line;
+}
+
+.dialog-actions {
+  padding: 16px 24px 24px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+/* Shared button styles for ConfirmDialog */
+.confirm-dialog .btn,
+.confirm-dialog-overlay .btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--primary-color-dark);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--text-color-secondary);
+  border: 1px solid var(--border-color-primary);
+}
+
+.btn-outline:hover:not(:disabled) {
+  background-color: var(--bg-color-secondary);
+}
+
+/* ================================================================
+   BackToTopButton styles
+   ================================================================ */
+
+.back-to-top.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: var(--bg-color-primary);
+  border: var(--border-color-primary) 1px solid;
+  cursor: pointer;
+}
+
+.back-to-top {
+  position: fixed;
+  right: 12px;
+  bottom: 60px;
+  z-index: 999;
+}
+
+.back-to-top .btn-icon {
+  color: var(--text-color-secondary);
+  transition: color 0.3s ease;
+}
+
+.back-to-top.btn:hover {
+  background-color: var(--bg-color-secondary);
+  transition: all 0.2s ease;
+}
+
+.back-to-top.btn:hover .btn-icon {
+  color: var(--text-color-primary);
+}
+
+/* Tooltip */
+.back-to-top .tooltip {
+  position: absolute;
+  right: 50px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--bg-color-primary);
+  color: var(--text-color-primary);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--border-color-primary);
+  z-index: 10;
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .back-to-top .tooltip {
+    display: none;
+  }
+}
+
+.back-to-top:hover .tooltip {
+  opacity: 1;
+  visibility: visible;
+}

@@ -1,0 +1,275 @@
+/* ================================================================
+   MultiImageUpload styles
+   Ported from 知舟 Vue3, scoped styles flattened
+   ================================================================ */
+
+.multi-image-upload {
+  width: 100%;
+}
+
+.multi-image-upload .upload-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.multi-image-upload .image-item,
+.multi-image-upload .upload-item {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.multi-image-upload .image-preview {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  cursor: zoom-in;
+}
+
+.multi-image-upload .image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.multi-image-upload .image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--overlay-bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.multi-image-upload .image-preview:hover .image-overlay {
+  opacity: 1;
+}
+
+.multi-image-upload .image-actions {
+  display: flex;
+  gap: 8px;
+  align-self: flex-end;
+}
+
+.multi-image-upload .action-btn {
+  background: rgba(255, 255, 255, 0.814);
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  opacity: 0.5;
+  padding: 0;
+  color: var(--text-color-primary);
+}
+
+.multi-image-upload .remove-btn:hover:not(:disabled) {
+  opacity: 1;
+}
+
+.multi-image-upload .action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.multi-image-upload .action-btn svg {
+  width: 12px;
+  height: 12px;
+}
+
+.multi-image-upload .image-index {
+  background: rgba(0, 0, 0, 0.534);
+  color: white;
+  border-radius: 12px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: bold;
+  align-self: flex-start;
+}
+
+.multi-image-upload .upload-item {
+  border: 2px dashed var(--border-color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--bg-color-primary);
+}
+
+.multi-image-upload .upload-item:hover,
+.multi-image-upload .upload-item.drag-over {
+  border-color: var(--primary-color);
+}
+
+.multi-image-upload .upload-item.uploading {
+  border-color: var(--primary-color);
+  background-color: rgba(255, 71, 87, 0.05);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.multi-image-upload .upload-icon.uploading {
+  animation: miu-spin 1s linear infinite;
+  color: var(--primary-color);
+}
+
+.multi-image-upload .image-item {
+  transition: all 0.2s ease;
+  cursor: move;
+  user-select: none;
+}
+
+.multi-image-upload .image-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* 拖拽状态样式 */
+.multi-image-upload .image-item.dragging {
+  opacity: 0.5;
+  transform: scale(1.05) rotate(5deg);
+  z-index: 1000;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.multi-image-upload .image-item.touch-dragging {
+  opacity: 0.8;
+  transform: scale(1.6) rotate(3deg);
+  z-index: 1000;
+}
+
+.multi-image-upload .image-item.long-pressing {
+  transform: scale(0.95);
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+  .multi-image-upload .image-item {
+    touch-action: pan-y;
+  }
+
+  .multi-image-upload .image-item.touch-dragging {
+    touch-action: none;
+    transform: rotate(2deg);
+  }
+
+  .multi-image-upload .image-item.long-pressing {
+    transform: scale(0.9);
+  }
+
+  .multi-image-upload .image-overlay {
+    pointer-events: none;
+  }
+
+  .multi-image-upload .image-overlay .action-btn {
+    pointer-events: auto;
+  }
+
+  .multi-image-upload .upload-grid {
+    user-select: none;
+  }
+}
+
+.multi-image-upload .upload-placeholder {
+  text-align: center;
+  color: var(--text-color-secondary);
+}
+
+.multi-image-upload .upload-icon {
+  width: 24px;
+  height: 24px;
+  margin-bottom: 5px;
+  color: var(--text-color-secondary);
+}
+
+.multi-image-upload .upload-placeholder p {
+  margin: 2px 0;
+  font-size: 12px;
+}
+
+.multi-image-upload .upload-hint {
+  color: var(--text-color-secondary);
+  font-size: 10px !important;
+}
+
+.multi-image-upload .drag-hint {
+  color: var(--text-color-secondary);
+  font-size: 10px !important;
+  margin-top: 4px;
+}
+
+.multi-image-upload .upload-loading {
+  text-align: center;
+  color: var(--primary-color);
+}
+
+.multi-image-upload .loading-icon {
+  width: 20px;
+  height: 20px;
+  margin-bottom: 5px;
+  animation: miu-spin 1s linear infinite;
+}
+
+@keyframes miu-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.multi-image-upload .upload-loading p {
+  margin: 2px 0;
+  font-size: 12px;
+}
+
+.multi-image-upload .error-message {
+  color: var(--primary-color);
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+.multi-image-upload .upload-tips {
+  font-size: 12px;
+  color: var(--text-color-secondary);
+  line-height: 1.4;
+}
+
+.multi-image-upload .upload-tips p {
+  margin: 2px 0;
+}
+
+.multi-image-upload .drag-tip .mobile-tip {
+  display: none;
+}
+
+.multi-image-upload .drag-tip .desktop-tip {
+  display: inline;
+}
+
+@media (max-width: 768px) {
+  .multi-image-upload .drag-tip .mobile-tip {
+    display: inline;
+  }
+  .multi-image-upload .drag-tip .desktop-tip {
+    display: none;
+  }
+}
