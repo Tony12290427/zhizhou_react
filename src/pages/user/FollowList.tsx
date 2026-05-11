@@ -325,11 +325,11 @@ export default function FollowList() {
         .tab-item { width: 80px; height: 40px; font-size: 16px; color: var(--text-color-secondary); cursor: pointer; background: transparent; border-radius: 999px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; user-select: none; position: relative; z-index: 1; }
         .tab-item:hover { color: var(--text-color-primary); }
         .tab-item.active { color: var(--text-color-primary); font-weight: bold; background: transparent; }
-        .tab-slider { position: absolute; top: 16px; width: 80px; height: 40px; border-radius: 999px; background: var(--bg-color-secondary); transition: left 0.3s cubic-bezier(.4, 0, .2, 1); z-index: 0; }
-        .fixedTab .tab-slider { top: 16px; width: 80px; height: 40px; border-radius: 999px; background: var(--bg-color-secondary); transition: left 0.3s cubic-bezier(.4, 0, .2, 1); z-index: 0; }
+        .tab-slider { position: absolute; top: 16px; width: 80px; height: 40px; border-radius: 999px; background: var(--bg-color-secondary); transition: left 0.3s cubic-bezier(.4, 0, .2, 1), background-color 0.3s ease; z-index: 0; }
+        .fixedTab .tab-slider { top: 16px; width: 80px; height: 40px; border-radius: 999px; background: var(--bg-color-secondary); transition: left 0.3s cubic-bezier(.4, 0, .2, 1), background-color 0.3s ease; z-index: 0; }
         .hidden { display: none; }
         .content-switch-container { width: 100%; max-width: 1200px; background: var(--bg-color-primary); position: relative; overflow: hidden; }
-        .content-item { position: absolute; top: 0; left: 0; width: 100%; background: var(--bg-color-primary); transition: transform 0.3s ease; opacity: 0; pointer-events: none; display: flex; justify-content: center; }
+        .content-item { position: absolute; top: 0; left: 0; width: 100%; background: var(--bg-color-primary); transition: transform 0.3s ease, background-color 0.3s ease; opacity: 0; pointer-events: none; display: flex; justify-content: center; }
         .content-item.active { position: relative; opacity: 1; pointer-events: auto; }
         .user-list-container { width: 100%; max-width: 700px; padding: 0 16px calc(48px + env(safe-area-inset-bottom, 0px)) 16px; margin: 0 auto; background: var(--bg-color-primary); }
         .user-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; }

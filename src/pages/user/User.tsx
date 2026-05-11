@@ -343,7 +343,7 @@ export default function User() {
           overflow: hidden;
           padding-bottom: calc(48px + env(safe-area-inset-bottom, 0px));
         }
-        .content-item { position: absolute; top: 0; left: 0; width: 100%; background: var(--bg-color-primary); transition: transform 0.3s ease; opacity: 0; pointer-events: none; }
+        .content-item { position: absolute; top: 0; left: 0; width: 100%; background: var(--bg-color-primary); transition: transform 0.3s ease, background-color 0.3s ease; opacity: 0; pointer-events: none; }
         .content-item.active { position: relative; opacity: 1; pointer-events: auto; }
         .waterfall-container { width: 100%; max-width: 700px; padding: 0 8px; margin: 0 auto; background: var(--bg-color-primary); }
         @media (min-width: 960px) { .waterfall-container { max-width: 1000px; padding: 0 16px; } }
@@ -370,8 +370,8 @@ export default function User() {
         .tab-item { width: 64px; height: 40px; font-size: 16px; color: var(--text-color-secondary); cursor: pointer; background: transparent; border-radius: 999px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; user-select: none; position: relative; z-index: 1; }
         .tab-item:hover { color: var(--text-color-primary); }
         .tab-item.active { color: var(--text-color-primary); font-weight: bold; background: transparent; }
-        .tab-slider { position: absolute; top: 16px; width: 64px; height: 40px; border-radius: 999px; background: var(--bg-color-secondary); transition: left 0.3s cubic-bezier(.4, 0, .2, 1); z-index: 0; }
-        .fixedTab .tab-slider { top: 16px; width: 64px; height: 40px; border-radius: 999px; background: var(--bg-color-secondary); transition: left 0.3s cubic-bezier(.4, 0, .2, 1); z-index: 0; }
+        .tab-slider { position: absolute; top: 16px; width: 64px; height: 40px; border-radius: 999px; background: var(--bg-color-secondary); transition: left 0.3s cubic-bezier(.4, 0, .2, 1), background-color 0.3s ease; z-index: 0; }
+        .fixedTab .tab-slider { top: 16px; width: 64px; height: 40px; border-radius: 999px; background: var(--bg-color-secondary); transition: left 0.3s cubic-bezier(.4, 0, .2, 1), background-color 0.3s ease; z-index: 0; }
         .hidden { display: none; }
         .edit-profile-button-wrapper { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); }
         .edit-profile-btn { padding: 3px 16px; border: 1px solid var(--text-color-quaternary); border-radius: 20px; font-size: 14px; font-weight: bold; cursor: pointer; width: 90px; height: 40px; text-align: center; transition: all 0.3s ease; user-select: none; background: #aeadad0d; color: var(--text-color-tertiary); }

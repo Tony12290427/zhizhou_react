@@ -253,7 +253,7 @@ export function TagSelector({
           border-radius: 4px;
           font-size: 14px;
           outline: none;
-          transition: border-color 0.3s;
+          transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
           caret-color: var(--primary-color);
           background: var(--bg-color-primary);
           color: var(--text-color-primary);
