@@ -267,11 +267,13 @@ export default function User() {
           style={{ transform: activeTab === 'posts' ? 'translateX(0%)' : 'translateX(-100%)' }}
         >
           <div className="waterfall-container">
-            <WaterfallFlow
-              userId={userStore.userInfo?.user_id}
-              type="posts"
-              refreshKey={refreshKeys.posts}
-            />
+            {userStore.userInfo?.user_id && (
+              <WaterfallFlow
+                userId={userStore.userInfo.user_id}
+                type="posts"
+                refreshKey={refreshKeys.posts}
+              />
+            )}
           </div>
         </div>
         <div
@@ -286,11 +288,13 @@ export default function User() {
           }}
         >
           <div className="waterfall-container">
-            <WaterfallFlow
-              userId={userStore.userInfo?.user_id}
-              type="collections"
-              refreshKey={refreshKeys.collections}
-            />
+            {userStore.userInfo?.user_id && (
+              <WaterfallFlow
+                userId={userStore.userInfo.user_id}
+                type="collections"
+                refreshKey={refreshKeys.collections}
+              />
+            )}
           </div>
         </div>
         <div
@@ -298,11 +302,13 @@ export default function User() {
           style={{ transform: activeTab === 'likes' ? 'translateX(0%)' : 'translateX(100%)' }}
         >
           <div className="waterfall-container">
-            <WaterfallFlow
-              userId={userStore.userInfo?.user_id}
-              type="likes"
-              refreshKey={refreshKeys.likes}
-            />
+            {userStore.userInfo?.user_id && (
+              <WaterfallFlow
+                userId={userStore.userInfo.user_id}
+                type="likes"
+                refreshKey={refreshKeys.likes}
+              />
+            )}
           </div>
         </div>
       </div>

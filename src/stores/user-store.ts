@@ -2,6 +2,11 @@ import { create } from 'zustand'
 import type { UserInfo } from '@/types/user'
 import request from '@/lib/request'
 
+/** Backend returns `id` but frontend expects `user_id`; normalize on save. */
+function normalizeUserInfo(raw: any): UserInfo {
+  return { ...raw, user_id: String(raw.user_id || raw.id || '') }
+}
+
 interface LoginCredentials {
   account: string
   password: string
@@ -80,8 +85,9 @@ export const useUserStore = create<UserState>((set, get) => ({
         try {
           const user: any = await request.get('/auth/me')
           if (user) {
-            set({ userInfo: user })
-            localStorage.setItem('userInfo', JSON.stringify(user))
+            const norm = normalizeUserInfo(user)
+            set({ userInfo: norm })
+            localStorage.setItem('userInfo', JSON.stringify(norm))
           }
         } catch { /* me may fail if token not yet propagated */ }
 
@@ -111,7 +117,7 @@ export const useUserStore = create<UserState>((set, get) => ({
 
         try {
           const user: any = await request.get('/auth/me')
-          if (user) { set({ userInfo: user }); localStorage.setItem('userInfo', JSON.stringify(user)) }
+          if (user) { const n = normalizeUserInfo(user); set({ userInfo: n }); localStorage.setItem('userInfo', JSON.stringify(n)) }
         } catch { /* ignore */ }
 
         return { success: true }
@@ -158,9 +164,10 @@ export const useUserStore = create<UserState>((set, get) => ({
   getCurrentUser: async () => {
     try {
       const user: any = await request.get('/auth/me')
-      set({ userInfo: user })
-      localStorage.setItem('userInfo', JSON.stringify(user))
-      return user as UserInfo
+      const n = normalizeUserInfo(user)
+      set({ userInfo: n })
+      localStorage.setItem('userInfo', JSON.stringify(n))
+      return n
     } catch {
       return null
     }

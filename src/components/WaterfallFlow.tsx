@@ -723,39 +723,29 @@ const WaterfallFlow: React.FC<WaterfallFlowProps> = ({
   }, [refreshKey])
 
   useEffect(() => {
-    // Skip on initial mount (already handled by mount effect)
-    // This runs on category change
     initContent()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [category])
+  }, [category, initContent])
 
   useEffect(() => {
     initContent()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchKeyword])
+  }, [searchKeyword, initContent])
 
   useEffect(() => {
     initContent()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTag])
-
-  useEffect(() => {
-    // Deep compare for preloadedPosts
-    initContent()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(preloadedPosts)])
+  }, [searchTag, initContent])
 
   useEffect(() => {
     initContent()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId])
+  }, [JSON.stringify(preloadedPosts), initContent])
 
   useEffect(() => {
-    // Reset initial load flag when type changes (tab switch)
+    initContent()
+  }, [userId, initContent])
+
+  useEffect(() => {
     setIsInitialLoad(true)
     initContent()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [type])
+  }, [type, initContent])
 
   // ---- Empty state message ----
   const getEmptyMessage = (): string => {
