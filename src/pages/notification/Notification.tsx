@@ -129,7 +129,7 @@ export default function Notification() {
         action: item.title || (item.type === 5 ? '回复了你的评论' : item.type === 8 ? '@了你' : '评论了你的笔记'),
         time: formatTime(item.createdAt || item.created_at),
         content: item.type === 8 ? '点击查看详情' : (item.commentContent || item.comment_content || '原评论已删除'),
-        postImage: item.postImage || item.post_image || '/default-post.png',
+        postImage: item.postImage || item.post_image || '/zhizhou-placeholder.jpg',
         target_id: item.postId ?? item.target_id,
         commentId: item.commentId ?? item.comment_id,
         isLiked: (item.commentIsLiked ?? item.comment_is_liked) === 1,
@@ -180,7 +180,7 @@ export default function Notification() {
         verified: item.actorVerified || item.from_verified || 0,
         action: item.title || '点赞了你的内容',
         time: formatTime(item.createdAt || item.created_at),
-        postImage: item.postImage || item.post_image || '/default-post.png',
+        postImage: item.postImage || item.post_image || '/zhizhou-placeholder.jpg',
         target_id: item.postId ?? item.target_id,
         target_type: item.targetType ?? item.target_type,
         commentId: item.commentId ?? item.comment_id,
@@ -227,7 +227,7 @@ export default function Notification() {
         verified: item.actorVerified || item.from_verified || 0,
         action: item.title || '收藏了你的笔记',
         time: formatTime(item.createdAt || item.created_at),
-        postImage: item.postImage || item.post_image || '/default-post.png',
+        postImage: item.postImage || item.post_image || '/zhizhou-placeholder.jpg',
         target_id: item.postId ?? item.target_id,
         isRead: item.isRead ?? item.is_read === 1,
         isFollowing: false,
@@ -529,7 +529,7 @@ export default function Notification() {
                           </div>
                         ) : (
                           <div className="post-thumbnail" onClick={() => onImageClick(item)}>
-                            <img src={item.postImage || '/default-post.png'} alt="缩略图" onError={(e) => { e.currentTarget.src = '/default-post.png' }} />
+                            <img src={item.postImage || '/zhizhou-placeholder.jpg'} alt="缩略图" onError={(e) => { e.currentTarget.src = '/zhizhou-placeholder.jpg' }} />
                           </div>
                         )}
                       </div>
