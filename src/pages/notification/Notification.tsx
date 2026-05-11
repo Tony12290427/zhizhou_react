@@ -454,7 +454,9 @@ export default function Notification() {
   return (
     <div className="content-container">
       <div className="notification-main">
-        <TabContainer tabs={TABS} activeTab={activeTab} onChange={handleTabChange} />
+        <div className="notification-tabs">
+          <TabContainer tabs={TABS} activeTab={activeTab} onChange={handleTabChange} />
+        </div>
         <BackToTopButton />
 
         {/* Mark all as read button */}
@@ -552,10 +554,11 @@ export default function Notification() {
       )}
 
       <style>{`
-        .content-container { background-color: var(--bg-color-primary); padding-top: 144px; transition: background 0.3s ease; }
-        .loading-container { display: flex; align-items: center; justify-content: center; gap: 16px; padding: 20px 16px; flex-direction: row; position: fixed; top: 129px; left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: 700px; z-index: 100; background-color: var(--bg-color-primary); }
+        .content-container { background-color: var(--bg-color-primary); padding-top: 72px; transition: background 0.3s ease; }
+        .loading-container { display: flex; align-items: center; justify-content: center; gap: 16px; padding: 20px 16px; flex-direction: row; position: fixed; top: 72px; left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: 700px; z-index: 100; background-color: var(--bg-color-primary); }
         .loading-text { color: var(--text-color-secondary); font-size: 14px; }
         .notification-main { max-width: 700px; margin: 0 auto; padding: 0 16px; background-color: var(--bg-color-primary); }
+        .notification-tabs { position: sticky; top: 72px; z-index: 99; background-color: var(--bg-color-primary); padding: 8px 0; margin: 0 -16px; padding-left: 16px; padding-right: 16px; }
         .floating-mark-read-btn-wrapper { position: fixed; bottom: 60px; right: 12px; z-index: 999; cursor: pointer; display: inline-block; }
         .floating-mark-read-btn { display: flex; justify-content: center; align-items: center; width: 38px; height: 38px; border-radius: 50%; background-color: var(--bg-color-primary); border: 1px solid var(--border-color-primary); transition: all 0.3s ease; }
         .floating-mark-read-btn:hover { background-color: var(--bg-color-secondary); }
@@ -588,6 +591,7 @@ export default function Notification() {
         .load-more-trigger { height: 1px; width: 100%; }
         @media (min-width: 901px) {
           .notification-main { max-width: 700px; margin: 0 auto; padding: 0; }
+          .notification-tabs { margin: 0; padding-left: 0; padding-right: 0; }
           .loading-container { left: calc(50% + 114px); }
         }
         @media (max-width: 900px) {
