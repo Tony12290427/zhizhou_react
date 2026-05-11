@@ -175,7 +175,7 @@ export default function Sidebar() {
         </li>
 
         {/* 通知 */}
-        <li className="notification-item">
+        <li className="sidebar-notify-item">
           <Link
             to="/notification"
             className={`sidebar-link${location.pathname === '/notification' ? ' active-link' : ''}`}
@@ -389,11 +389,11 @@ export default function Sidebar() {
           cursor: pointer;
         }
 
-        .notification-item {
+        .sidebar-notify-item {
           position: relative;
         }
 
-        .notification-item .count {
+        .sidebar-notify-item .count {
           position: absolute;
           width: 20px;
           height: 20px;
