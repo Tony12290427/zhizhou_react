@@ -161,7 +161,7 @@ export function FollowButton({
       <style>{`
         .follow-btn {
           padding: 8px 8px;
-          border: none;
+          border: 1px solid transparent;
           border-radius: 20px;
           font-size: 16px;
           font-weight: bold;
@@ -171,9 +171,10 @@ export function FollowButton({
           width: 96px;
           height: 40px;
           text-align: center;
-          transition: all 0.3s ease;
+          transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
           user-select: none;
           outline: none;
+          box-sizing: border-box;
         }
         .follow-btn:not(.following) {
           background: var(--primary-color);
@@ -185,7 +186,7 @@ export function FollowButton({
         .follow-btn.following {
           background: transparent;
           color: var(--text-color-secondary);
-          border: 1px solid var(--border-color-secondary);
+          border-color: var(--border-color-secondary);
         }
         .follow-btn.following:hover {
           background: var(--bg-color-secondary);
