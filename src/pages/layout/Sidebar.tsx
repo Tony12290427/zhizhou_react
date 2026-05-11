@@ -340,7 +340,6 @@ export default function Sidebar() {
 
         .sidebar-link.active-link {
           background: var(--bg-color-secondary);
-          transition: border-color 0.3s ease, background-color 0.3s ease;
         }
 
         .sidebar-footer-item .sidebar-link:hover {
