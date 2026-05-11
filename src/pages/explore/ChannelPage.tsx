@@ -88,7 +88,7 @@ export default function ChannelPage() {
         .channel-page {
           width: 100%;
           background: var(--bg-color-primary);
-          transition: background-color 0.2s ease;
+          transition: background-color 0.3s ease;
         }
       `}</style>
     </div>

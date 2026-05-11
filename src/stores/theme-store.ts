@@ -67,3 +67,13 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
     get().setTheme(currentTheme === 'light' ? 'dark' : 'light')
   },
 }))
+
+// Module-level system theme listener — matches Vue3 Pinia store approach.
+// Lives outside React component lifecycle so it's always active.
+const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+mediaQuery.addEventListener('change', () => {
+  const { currentTheme, setTheme } = useThemeStore.getState()
+  if (currentTheme === 'system') {
+    setTheme('system')
+  }
+})

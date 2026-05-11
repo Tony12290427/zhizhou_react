@@ -1,18 +1,22 @@
 import { useEffect } from 'react'
 import { useThemeStore } from '@/stores/theme-store'
 
+/**
+ * Ensures the theme store re-evaluates the system preference when the
+ * tab becomes visible (e.g. user changed OS theme while tab was hidden).
+ * The primary system-theme listener lives in theme-store.ts at module level.
+ */
 export function useSystemTheme() {
   const currentTheme = useThemeStore((s) => s.currentTheme)
   const setTheme = useThemeStore((s) => s.setTheme)
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-    const handleChange = () => {
-      if (currentTheme === 'system') {
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible' && currentTheme === 'system') {
         setTheme('system')
       }
     }
-    mediaQuery.addEventListener('change', handleChange)
-    return () => mediaQuery.removeEventListener('change', handleChange)
+    document.addEventListener('visibilitychange', handleVisibility)
+    return () => document.removeEventListener('visibilitychange', handleVisibility)
   }, [currentTheme, setTheme])
 }

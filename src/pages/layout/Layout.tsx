@@ -42,7 +42,7 @@ export default function Layout() {
           overflow-x: hidden;
           position: relative;
           box-sizing: border-box;
-          transition: background-color 0.2s ease;
+          transition: background-color 0.3s ease;
         }
 
         .main-content {
@@ -51,7 +51,7 @@ export default function Layout() {
           flex-direction: column;
           min-width: 0;
           min-height: 100vh;
-          transition: margin-left 0.3s;
+          transition: background-color 0.3s ease, color 0.3s ease, margin-left 0.3s;
           width: 100%;
           overflow-x: hidden;
         }
@@ -73,7 +73,7 @@ export default function Layout() {
           flex-direction: column;
           justify-content: flex-start;
           background-color: var(--bg-color-primary);
-          transition: background-color 0.2s ease;
+          transition: background-color 0.3s ease;
         }
 
         @media (max-width: 960px) {

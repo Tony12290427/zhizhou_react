@@ -5,27 +5,23 @@ import {
   PenSquare,
   Bell,
   Menu,
-  User,
   LogIn,
   LogOut,
   Keyboard,
   ShieldCheck,
-  Sun,
-  Moon,
-  Settings,
   Info,
-  Palette,
 } from 'lucide-react'
 import { useUserStore } from '@/stores/user-store'
 import { useNotificationStore } from '@/stores/notification-store'
 import { useAuthStore } from '@/stores/auth-store'
 import { useNavigationStore } from '@/stores/navigation-store'
 import { useEventStore } from '@/stores/event-store'
-import { useThemeStore } from '@/stores/theme-store'
+
 import { useAboutStore } from '@/stores/about-store'
 import { useAccountSecurityStore } from '@/stores/account-security-store'
 import { useKeyboardShortcutsStore } from '@/stores/keyboard-shortcuts-store'
 import { ColorPickerMenuItem } from '@/components/menu/ColorPickerMenuItem'
+import { ThemeSwitcherMenuItem } from '@/components/menu/ThemeSwitcherMenuItem'
 
 const defaultAvatar = 'data:image/svg+xml;base64,' + btoa(
   '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="%23ccc"/><circle cx="50" cy="38" r="16" fill="%23fff"/><ellipse cx="50" cy="82" rx="32" ry="22" fill="%23fff"/></svg>'
@@ -39,7 +35,7 @@ export default function Sidebar() {
   const authStore = useAuthStore()
   const navigationStore = useNavigationStore()
   const eventStore = useEventStore()
-  const themeStore = useThemeStore()
+
   const aboutStore = useAboutStore()
   const accountSecurityStore = useAccountSecurityStore()
   const keyboardShortcutsStore = useKeyboardShortcutsStore()
@@ -257,40 +253,7 @@ export default function Sidebar() {
             <div className="dropdown-divider" />
 
             <ColorPickerMenuItem />
-
-            {/* Theme switcher */}
-            <div className="theme-switcher">
-              <span className="theme-label">深色模式</span>
-              <div className="theme-toggle-track">
-                <div
-                  className="theme-toggle-indicator"
-                  style={{
-                    transform: `translateX(${themeStore.currentTheme === 'dark' ? 28 : themeStore.currentTheme === 'light' ? 0 : 56}px)`,
-                  }}
-                />
-                <button
-                  className={`theme-toggle-option${themeStore.currentTheme === 'light' ? ' active' : ''}`}
-                  onClick={(e) => { e.stopPropagation(); themeStore.setTheme('light') }}
-                  title="浅色模式"
-                >
-                  <Sun size={14} />
-                </button>
-                <button
-                  className={`theme-toggle-option${themeStore.currentTheme === 'dark' ? ' active' : ''}`}
-                  onClick={(e) => { e.stopPropagation(); themeStore.setTheme('dark') }}
-                  title="深色模式"
-                >
-                  <Moon size={14} />
-                </button>
-                <button
-                  className={`theme-toggle-option${themeStore.currentTheme === 'system' ? ' active' : ''}`}
-                  onClick={(e) => { e.stopPropagation(); themeStore.setTheme('system') }}
-                  title="跟随系统"
-                >
-                  <Settings size={14} />
-                </button>
-              </div>
-            </div>
+            <ThemeSwitcherMenuItem />
 
             <div className="dropdown-divider" />
 
@@ -323,7 +286,7 @@ export default function Sidebar() {
           overflow-y: auto;
           padding: 12px;
           justify-content: space-between;
-          transition: border-color 0.2s ease, background-color 0.2s ease;
+          transition: border-color 0.3s ease, background-color 0.3s ease;
         }
 
         .sidebar-menu {
@@ -377,7 +340,7 @@ export default function Sidebar() {
 
         .sidebar-link.active-link {
           background: var(--bg-color-secondary);
-          transition: border-color 0.2s ease, background-color 0.2s ease;
+          transition: border-color 0.3s ease, background-color 0.3s ease;
         }
 
         .sidebar-footer-item .sidebar-link:hover {
@@ -476,7 +439,7 @@ export default function Sidebar() {
 
         .dropdown-item {
           cursor: pointer;
-          transition: background-color 0.2s ease;
+          transition: background-color 0.3s ease;
           border-radius: 8px;
           margin: 2px 4px;
           box-sizing: border-box;
@@ -496,71 +459,6 @@ export default function Sidebar() {
           height: 1px;
           background: var(--border-color-primary);
           margin: 4px 16px;
-        }
-
-        /* Theme switcher in dropdown */
-        .theme-switcher {
-          padding: 8px 4px;
-          margin: 4px;
-          border-radius: 999px;
-        }
-
-        .theme-label {
-          font-size: 16px;
-          color: var(--text-color-primary);
-          font-weight: 400;
-          padding: 4px 12px;
-          display: block;
-          margin-bottom: 8px;
-        }
-
-        .theme-toggle-track {
-          position: relative;
-          display: flex;
-          background: var(--bg-color-secondary);
-          border-radius: 16px;
-          padding: 2px;
-          border: 1px solid var(--border-color-primary);
-          margin: 0 12px;
-          width: fit-content;
-        }
-
-        .theme-toggle-indicator {
-          position: absolute;
-          top: 3px;
-          left: 3px;
-          width: 26px;
-          height: 26px;
-          background: var(--bg-color-primary);
-          border-radius: 50%;
-          transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-          z-index: 1;
-        }
-
-        .theme-toggle-option {
-          position: relative;
-          width: 28px;
-          height: 28px;
-          padding: 0;
-          border: none;
-          background: transparent;
-          border-radius: 14px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          z-index: 2;
-          color: var(--text-color-tertiary);
-        }
-
-        .theme-toggle-option:hover {
-          color: var(--text-color-secondary);
-        }
-
-        .theme-toggle-option.active {
-          color: var(--text-color-primary);
         }
 
         @media (max-width: 960px) {

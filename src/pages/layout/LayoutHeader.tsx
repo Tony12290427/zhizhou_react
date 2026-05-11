@@ -1,15 +1,16 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
-import { Search, X, Menu, Info, Keyboard, ShieldCheck, Sun, Moon, Settings, LogOut, LogIn } from 'lucide-react'
+import { Search, X, Menu, Info, Keyboard, ShieldCheck, LogOut, LogIn } from 'lucide-react'
 import SearchDropdown from './SearchDropdown'
 import { useSearchHistoryStore } from '@/stores/search-history-store'
 import { useUserStore } from '@/stores/user-store'
 import { useAuthStore } from '@/stores/auth-store'
-import { useThemeStore } from '@/stores/theme-store'
+
 import { useAboutStore } from '@/stores/about-store'
 import { useAccountSecurityStore } from '@/stores/account-security-store'
 import { useKeyboardShortcutsStore } from '@/stores/keyboard-shortcuts-store'
 import { ColorPickerMenuItem } from '@/components/menu/ColorPickerMenuItem'
+import { ThemeSwitcherMenuItem } from '@/components/menu/ThemeSwitcherMenuItem'
 
 const logoUrl = '/zhizhou.svg'
 
@@ -244,7 +245,7 @@ export default function LayoutHeader() {
           right: 0;
           z-index: 1000;
           width: 100%;
-          transition: border-color 0.2s ease, background-color 0.2s ease;
+          transition: border-color 0.3s ease, background-color 0.3s ease;
         }
 
         .header-container {
@@ -355,7 +356,7 @@ export default function LayoutHeader() {
           padding: 0 15px;
           position: relative;
           box-sizing: border-box;
-          transition: background-color 0.2s ease;
+          transition: background-color 0.3s ease;
         }
 
         .search-bar input {
@@ -439,7 +440,6 @@ function DropdownMenuBtn() {
   const ref = useRef<HTMLDivElement>(null)
   const userStore = useUserStore()
   const authStore = useAuthStore()
-  const themeStore = useThemeStore()
   const aboutStore = useAboutStore()
   const accountSecurityStore = useAccountSecurityStore()
   const keyboardShortcutsStore = useKeyboardShortcutsStore()
@@ -504,38 +504,7 @@ function DropdownMenuBtn() {
           )}
           <div className="dropdown-divider-header" />
           <ColorPickerMenuItem />
-          <div className="theme-switcher-header">
-            <span className="theme-label-header">深色模式</span>
-            <div className="theme-toggle-track-header">
-              <div
-                className="theme-toggle-indicator-header"
-                style={{
-                  transform: `translateX(${themeStore.currentTheme === 'dark' ? 28 : themeStore.currentTheme === 'light' ? 0 : 56}px)`,
-                }}
-              />
-              <button
-                className={`theme-toggle-option-header${themeStore.currentTheme === 'light' ? ' active' : ''}`}
-                onClick={(e) => { e.stopPropagation(); themeStore.setTheme('light') }}
-                title="浅色模式"
-              >
-                <Sun size={14} />
-              </button>
-              <button
-                className={`theme-toggle-option-header${themeStore.currentTheme === 'dark' ? ' active' : ''}`}
-                onClick={(e) => { e.stopPropagation(); themeStore.setTheme('dark') }}
-                title="深色模式"
-              >
-                <Moon size={14} />
-              </button>
-              <button
-                className={`theme-toggle-option-header${themeStore.currentTheme === 'system' ? ' active' : ''}`}
-                onClick={(e) => { e.stopPropagation(); themeStore.setTheme('system') }}
-                title="跟随系统"
-              >
-                <Settings size={14} />
-              </button>
-            </div>
-          </div>
+          <ThemeSwitcherMenuItem />
           <div className="dropdown-divider-header" />
           {isLoggedIn ? (
             <div className="dropdown-item" onClick={() => handleMenuAction('logout')}>
@@ -601,7 +570,7 @@ function DropdownMenuBtn() {
         }
         .dropdown-item {
           cursor: pointer;
-          transition: background-color 0.2s ease;
+          transition: background-color 0.3s ease;
           border-radius: 8px;
           margin: 2px 4px;
           box-sizing: border-box;
@@ -619,63 +588,6 @@ function DropdownMenuBtn() {
           height: 1px;
           background: var(--border-color-primary);
           margin: 4px 16px;
-        }
-        .theme-switcher-header {
-          padding: 8px 4px;
-          margin: 4px;
-          border-radius: 999px;
-        }
-        .theme-label-header {
-          font-size: 16px;
-          color: var(--text-color-primary);
-          font-weight: 400;
-          padding: 4px 12px;
-          display: block;
-          margin-bottom: 8px;
-        }
-        .theme-toggle-track-header {
-          position: relative;
-          display: flex;
-          background: var(--bg-color-secondary);
-          border-radius: 16px;
-          padding: 2px;
-          border: 1px solid var(--border-color-primary);
-          margin: 0 12px;
-          width: fit-content;
-        }
-        .theme-toggle-indicator-header {
-          position: absolute;
-          top: 3px;
-          left: 3px;
-          width: 26px;
-          height: 26px;
-          background: var(--bg-color-primary);
-          border-radius: 50%;
-          transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-          z-index: 1;
-        }
-        .theme-toggle-option-header {
-          position: relative;
-          width: 28px;
-          height: 28px;
-          padding: 0;
-          border: none;
-          background: transparent;
-          border-radius: 14px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          z-index: 2;
-          color: var(--text-color-tertiary);
-        }
-        .theme-toggle-option-header:hover {
-          color: var(--text-color-secondary);
-        }
-        .theme-toggle-option-header.active {
-          color: var(--text-color-primary);
         }
       `}</style>
     </div>

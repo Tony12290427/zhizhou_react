@@ -45,25 +45,6 @@ export default function Explore() {
       <div className={`explore-main${isChannelLoading ? ' with-loading' : ''}`}>
         <Outlet />
       </div>
-      <style>{`
-        .explore-container {
-          padding-top: 72px;
-          min-height: 100vh;
-          background: var(--bg-color-primary);
-          transition: background-color 0.2s ease;
-        }
-        .explore-main {
-          padding: 0px 10px calc(48px + env(safe-area-inset-bottom, 0px)) 10px;
-          width: 100%;
-          box-sizing: border-box;
-          overflow-x: hidden;
-          background: var(--bg-color-primary);
-          transition: margin-top 0.3s ease, border-color 0.2s ease, background-color 0.2s ease;
-        }
-        .explore-main.with-loading {
-          margin-top: 40px;
-        }
-      `}</style>
     </div>
   )
 }
