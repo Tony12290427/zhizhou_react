@@ -427,6 +427,8 @@ export default function Notification() {
     window.scrollTo(0, 0)
     if (isLoggedIn) {
       notificationStore.fetchUnreadCountByType()
+      // Auto-mark all as read when entering the notification page
+      markAllAsRead().catch(() => {})
     }
     loadCurrentTabData()
     return () => {
@@ -570,8 +572,8 @@ export default function Notification() {
         .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 20px; text-align: center; }
         .empty-state h3 { color: var(--text-color-primary); font-size: 18px; font-weight: 600; margin: 0 0 8px 0; }
         .empty-state p { color: var(--text-color-secondary); font-size: 14px; margin: 0; line-height: 1.5; }
-        .notification-item { display: flex; align-items: flex-start; padding-top: 20px; }
-        .notification-item.unread { background: var(--bg-color-secondary); border-radius: 8px; margin: 0 -8px; padding-left: 8px; padding-right: 8px; margin-bottom: 5px; }
+        .notification-item { display: flex; align-items: flex-start; padding: 20px 8px 0 8px; margin: 0 -8px 5px -8px; border-radius: 8px; }
+        .notification-item.unread { background: var(--bg-color-secondary); }
         .unread-dot { width: 8px; height: 8px; background: var(--danger-color); border-radius: 50%; position: absolute; top: 0; right: 0; transform: translate(50%, -50%); }
         .left-section { flex-shrink: 0; margin-right: 24px; position: relative; }
         .user-avatar { width: 48px; height: 48px; border-radius: 50%; overflow: hidden; flex-shrink: 0; cursor: pointer; display: block; }
