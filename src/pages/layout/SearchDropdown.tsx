@@ -159,7 +159,7 @@ export default function SearchDropdown({
           padding: 4px 8px;
           border-radius: 4px;
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
           font-size: 13px;
           color: var(--text-color-secondary);
         }

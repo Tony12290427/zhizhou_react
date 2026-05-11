@@ -447,7 +447,7 @@ export function ResetPasswordModal({
           justify-content: center;
           z-index: 2000;
           opacity: 0;
-          transition: opacity 0.2s ease;
+          transition: opacity 0.3s ease;
           width: 100vw;
           height: 100%;
         }
@@ -463,7 +463,7 @@ export function ResetPasswordModal({
           overflow-y: auto;
           position: relative;
           transform: scale(0.9);
-          transition: transform 0.2s ease;
+          transition: transform 0.3s ease;
           box-shadow: 0 20px 40px var(--shadow-color);
         }
         .reset-modal.scale-in {
@@ -485,7 +485,7 @@ export function ResetPasswordModal({
           cursor: pointer;
           padding: 5px;
           color: var(--text-color-primary);
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
         }
         .close-btn:hover {
           color: var(--text-color-secondary);
@@ -532,7 +532,7 @@ export function ResetPasswordModal({
           background: var(--bg-color-secondary);
           color: var(--text-color-primary);
           caret-color: var(--primary-color);
-          transition: border-color 0.2s ease;
+          transition: border-color 0.3s ease;
         }
         .form-input:focus {
           outline: none;
@@ -579,7 +579,7 @@ export function ResetPasswordModal({
           font-size: 16px;
           font-weight: 600;
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -617,7 +617,7 @@ export function ResetPasswordModal({
           font-weight: 600;
           cursor: pointer;
           text-decoration: underline;
-          transition: color 0.2s ease;
+          transition: color 0.3s ease;
         }
         .switch-btn:hover {
           opacity: 0.8;
@@ -637,7 +637,7 @@ export function ResetPasswordModal({
           background: var(--primary-color);
           color: white;
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
           white-space: nowrap;
         }
         .email-code-btn:hover:not(:disabled) {

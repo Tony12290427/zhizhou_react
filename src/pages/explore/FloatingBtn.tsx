@@ -40,7 +40,7 @@ export default function FloatingBtn({ onRefresh }: FloatingBtnProps) {
           justify-content: center;
           cursor: pointer;
           color: var(--text-color-secondary);
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
           backdrop-filter: blur(10px);
         }
         .floating-btn:hover {

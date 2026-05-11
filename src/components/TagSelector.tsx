@@ -253,7 +253,7 @@ export function TagSelector({
           border-radius: 4px;
           font-size: 14px;
           outline: none;
-          transition: border-color 0.2s;
+          transition: border-color 0.3s;
           caret-color: var(--primary-color);
           background: var(--bg-color-primary);
           color: var(--text-color-primary);
@@ -280,7 +280,7 @@ export function TagSelector({
           border-radius: 4px;
           cursor: pointer;
           font-size: 14px;
-          transition: background-color 0.2s;
+          transition: background-color 0.3s;
         }
         .add-tag-btn:hover:not(:disabled) {
           background: var(--primary-color-dark);
@@ -316,7 +316,7 @@ export function TagSelector({
           border-radius: 16px;
           font-size: 14px;
           cursor: pointer;
-          transition: all 0.2s;
+          transition: all 0.3s;
           user-select: none;
         }
         .tag-item.selected {
@@ -363,7 +363,7 @@ export function TagSelector({
           display: flex;
           align-items: center;
           justify-content: center;
-          transition: background-color 0.2s;
+          transition: background-color 0.3s;
         }
         .remove-tag-btn:hover {
           background: rgba(255, 255, 255, 0.2);

@@ -168,7 +168,7 @@ export function AboutModal() {
           justify-content: center;
           z-index: 2000;
           opacity: 0;
-          transition: opacity 0.2s ease;
+          transition: opacity 0.3s ease;
         }
         .about-modal-overlay.animating {
           opacity: 1;
@@ -181,7 +181,7 @@ export function AboutModal() {
           max-height: 90vh;
           position: relative;
           transform: scale(0.9);
-          transition: transform 0.2s ease;
+          transition: transform 0.3s ease;
           box-shadow: 0 20px 40px var(--shadow-color);
           display: flex;
           flex-direction: column;
@@ -215,7 +215,7 @@ export function AboutModal() {
           justify-content: center;
           cursor: pointer;
           z-index: 1;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
         }
         .close-btn:hover {
           opacity: 0.8;
@@ -358,7 +358,7 @@ export function AboutModal() {
           color: var(--text-color-primary);
           font-weight: 450;
           text-decoration: none;
-          transition: opacity 0.2s ease;
+          transition: opacity 0.3s ease;
         }
         .api-link:hover {
           opacity: 0.8;

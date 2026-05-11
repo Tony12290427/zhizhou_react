@@ -18,7 +18,7 @@ export default function NotFound() {
           padding: 80px 20px;
           text-align: center;
           background: var(--bg-color-primary);
-          transition: background-color 0.2s ease;
+          transition: background-color 0.3s ease;
         }
         .not-found-container h1 {
           font-size: 72px;
@@ -40,7 +40,7 @@ export default function NotFound() {
           font-size: 16px;
           font-weight: 500;
           cursor: pointer;
-          transition: background-color 0.2s ease;
+          transition: background-color 0.3s ease;
         }
         .not-found-container button:hover {
           background: var(--primary-color-dark);

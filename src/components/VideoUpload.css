@@ -18,7 +18,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
 }
@@ -71,7 +71,7 @@
   flex-shrink: 0;
   position: relative;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .video-upload .video-thumbnail:hover {
@@ -94,7 +94,7 @@
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.3s ease;
   color: white;
   font-size: 10px;
   gap: 2px;
@@ -205,7 +205,7 @@
 .video-upload .progress-fill {
   height: 100%;
   background: var(--primary-color);
-  transition: width 0.2s ease;
+  transition: width 0.3s ease;
 }
 
 .video-upload .progress-text {

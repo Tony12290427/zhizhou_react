@@ -24,7 +24,7 @@ export default function UserCard({ user }: UserCardProps) {
           padding: 12px 16px;
           border-radius: 8px;
           cursor: pointer;
-          transition: background-color 0.15s ease;
+          transition: background-color 0.3s ease;
           border: 1px solid var(--border-color-secondary);
         }
         .user-card:hover {

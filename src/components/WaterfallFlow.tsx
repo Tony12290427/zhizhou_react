@@ -948,7 +948,7 @@ const WaterfallFlow: React.FC<WaterfallFlowProps> = ({
           background-color: var(--bg-color-primary);
           position: relative;
           box-sizing: border-box;
-          transition: border-color 0.2s ease, background-color 0.2s ease;
+          transition: border-color 0.3s ease, background-color 0.3s ease;
           visibility: visible;
           opacity: 1;
           contain: layout style paint;
@@ -1018,7 +1018,7 @@ const WaterfallFlow: React.FC<WaterfallFlowProps> = ({
           color: white;
           z-index: 2;
           backdrop-filter: blur(4px);
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
         }
 
         .content-img img {
@@ -1103,7 +1103,7 @@ const WaterfallFlow: React.FC<WaterfallFlowProps> = ({
 
         .clickable-name {
           cursor: pointer;
-          transition: color 0.2s ease;
+          transition: color 0.3s ease;
         }
 
         .clickable-name:hover {

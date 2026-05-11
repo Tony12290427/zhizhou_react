@@ -602,7 +602,7 @@ export function AuthModal() {
             justify-content: center;
             z-index: 2000;
             opacity: 0;
-            transition: opacity 0.2s ease;
+            transition: opacity 0.3s ease;
             width: 100vw;
             height: 100%;
           }
@@ -625,7 +625,7 @@ export function AuthModal() {
             z-index: 2001;
             transform: translate(-50%, -50%) scale(0.9);
             opacity: 0;
-            transition: transform 0.2s ease, opacity 0.2s ease;
+            transition: transform 0.3s ease, opacity 0.3s ease;
             box-shadow: 0 20px 40px var(--shadow-color);
           }
           .auth-modal.scale-in {
@@ -652,7 +652,7 @@ export function AuthModal() {
             cursor: pointer;
             padding: 5px;
             color: var(--text-color-primary);
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
           }
           .close-btn:hover {
             color: var(--text-color-secondary);
@@ -699,7 +699,7 @@ export function AuthModal() {
             background: var(--bg-color-secondary);
             color: var(--text-color-primary);
             caret-color: var(--primary-color);
-            transition: border-color 0.2s ease;
+            transition: border-color 0.3s ease;
           }
           .form-input:focus {
             outline: none;
@@ -732,7 +732,7 @@ export function AuthModal() {
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -776,7 +776,7 @@ export function AuthModal() {
             font-weight: 600;
             cursor: pointer;
             text-decoration: underline;
-            transition: color 0.2s ease;
+            transition: color 0.3s ease;
           }
           .switch-btn:hover {
             opacity: 0.8;
@@ -791,7 +791,7 @@ export function AuthModal() {
             color: var(--text-color-secondary);
             font-size: 13px;
             cursor: pointer;
-            transition: color 0.2s ease;
+            transition: color 0.3s ease;
           }
           .forgot-btn:hover {
             color: var(--primary-color);
@@ -811,7 +811,7 @@ export function AuthModal() {
             background: var(--primary-color);
             color: white;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             white-space: nowrap;
           }
           .email-code-btn:hover:not(:disabled) {

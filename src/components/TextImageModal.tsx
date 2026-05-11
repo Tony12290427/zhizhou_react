@@ -452,7 +452,7 @@ export default function TextImageModal({ visible, onClose, onGenerate }: TextIma
           display: flex;
           align-items: center;
           justify-content: center;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
         }
 
         .close-btn:hover {
@@ -549,7 +549,7 @@ export default function TextImageModal({ visible, onClose, onGenerate }: TextIma
           border: 1px solid var(--border-color-primary);
           border-radius: 8px;
           background: var(--bg-color-primary);
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
         }
 
         .content-input-wrapper:focus-within {
@@ -576,7 +576,7 @@ export default function TextImageModal({ visible, onClose, onGenerate }: TextIma
           color: var(--text-color-secondary);
           border-radius: 50%;
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
         }
 
         .emoji-btn:hover {
@@ -718,7 +718,7 @@ export default function TextImageModal({ visible, onClose, onGenerate }: TextIma
           flex-shrink: 0;
           width: 80px;
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
         }
 
         .template-item:hover .template-image {
@@ -767,7 +767,7 @@ export default function TextImageModal({ visible, onClose, onGenerate }: TextIma
           font-size: 16px;
           font-weight: 500;
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
           border: none;
           min-width: 80px;
         }

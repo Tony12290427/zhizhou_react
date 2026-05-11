@@ -42,7 +42,7 @@ export default function TagContainer({ tags, activeTag, onTagChange, loading }: 
           font-size: 13px;
           color: var(--text-color-secondary);
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
           white-space: nowrap;
         }
         .tag-item:hover {

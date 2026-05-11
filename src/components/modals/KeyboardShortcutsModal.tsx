@@ -106,7 +106,7 @@ export function KeyboardShortcutsModal() {
           justify-content: center;
           z-index: 2000;
           opacity: 0;
-          transition: opacity 0.2s ease;
+          transition: opacity 0.3s ease;
         }
         .shortcuts-modal-overlay.animating {
           opacity: 1;
@@ -118,7 +118,7 @@ export function KeyboardShortcutsModal() {
           min-height: 70vh;
           position: relative;
           transform: scale(0.9);
-          transition: transform 0.2s ease;
+          transition: transform 0.3s ease;
           box-shadow: 0 20px 40px var(--shadow-color);
           display: flex;
           flex-direction: column;
@@ -153,7 +153,7 @@ export function KeyboardShortcutsModal() {
           justify-content: center;
           cursor: pointer;
           z-index: 1;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
         }
         .close-btn:hover {
           opacity: 0.8;

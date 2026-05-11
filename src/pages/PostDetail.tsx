@@ -142,7 +142,7 @@ export default function PostDetail() {
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          transition: background-color 0.2s;
+          transition: background-color 0.3s;
         }
         .back-home-btn:hover {
           background: rgba(144, 144, 144, 0.292);

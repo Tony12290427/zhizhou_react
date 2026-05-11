@@ -234,7 +234,7 @@ select {
   border: none;
   background: none;
   position: relative;
-  transition: color 0.2s ease;
+  transition: color 0.3s ease;
   white-space: nowrap;
   font-weight: 400;
 }

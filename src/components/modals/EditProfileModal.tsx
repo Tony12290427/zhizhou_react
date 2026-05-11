@@ -416,7 +416,7 @@ export default function EditProfileModal({ visible, onClose, onSaved }: EditProf
           background: none; border: none; cursor: pointer; padding: 4px;
           color: var(--text-color-secondary); border-radius: 50%;
           display: flex; align-items: center; justify-content: center;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
         }
         .close-btn:hover { color: var(--text-color-primary); background-color: var(--bg-color-secondary); }
         .modal-body {
@@ -428,7 +428,7 @@ export default function EditProfileModal({ visible, onClose, onSaved }: EditProf
         .form-input {
           width: 100%; padding: 10px 12px; border: 1px solid var(--border-color-primary);
           border-radius: 8px; background: var(--bg-color-primary); color: var(--text-color-primary);
-          font-size: 14px; box-sizing: border-box; transition: border-color 0.2s ease;
+          font-size: 14px; box-sizing: border-box; transition: border-color 0.3s ease;
         }
         .form-input:focus { outline: none; border-color: var(--primary-color); }
         .form-input::placeholder { color: var(--text-color-quaternary); }
@@ -439,7 +439,7 @@ export default function EditProfileModal({ visible, onClose, onSaved }: EditProf
         .change-avatar-btn {
           padding: 8px 16px; background: transparent; color: var(--primary-color);
           border: 1px solid var(--primary-color); border-radius: 6px;
-          cursor: pointer; font-size: 14px; transition: all 0.2s ease;
+          cursor: pointer; font-size: 14px; transition: all 0.3s ease;
         }
         .change-avatar-btn:hover { background: var(--primary-color); color: white; }
         .bio-input-wrapper { position: relative; border: 1px solid var(--border-color-primary); border-radius: 8px; }
@@ -477,7 +477,7 @@ export default function EditProfileModal({ visible, onClose, onSaved }: EditProf
         }
         .cancel-btn, .save-btn {
           padding: 10px 24px; border-radius: 8px; font-size: 15px;
-          font-weight: 500; cursor: pointer; transition: all 0.2s ease; border: none;
+          font-weight: 500; cursor: pointer; transition: all 0.3s ease; border: none;
         }
         .cancel-btn {
           background: var(--bg-color-primary); color: var(--text-color-secondary);

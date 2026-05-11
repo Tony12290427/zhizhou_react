@@ -155,7 +155,7 @@ export function ContentRenderer({
           text-decoration: none;
           font-weight: 500;
           cursor: pointer;
-          transition: color 0.2s ease;
+          transition: color 0.3s ease;
           background: none;
           border: none;
           padding: 0;
@@ -208,7 +208,7 @@ export function ContentRenderer({
           cursor: pointer;
           border-radius: 4px;
           overflow: hidden;
-          transition: transform 0.2s ease;
+          transition: transform 0.3s ease;
         }
         .image-item:hover {
           transform: scale(1.02);

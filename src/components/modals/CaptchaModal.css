@@ -52,13 +52,13 @@
   cursor: pointer;
   padding: 5px;
   color: var(--text-color-primary);
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .captcha-modal .close-btn:hover {
   color: var(--text-color-secondary);
   transform: scale(1.1);
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .captcha-modal .close-btn svg {
@@ -118,7 +118,7 @@
 
 .captcha-modal .captcha-image {
   cursor: pointer;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.3s ease;
   overflow: hidden;
 }
 
@@ -149,7 +149,7 @@
   background: var(--bg-color-primary);
   color: var(--text-color-primary);
   caret-color: var(--primary-color);
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   box-sizing: border-box;
   padding: 0;
 }
@@ -176,7 +176,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  transition: all 0.2s;
+  transition: all 0.3s;
   text-decoration: none;
 }
 

@@ -189,7 +189,7 @@ export function TabContainer({
           width: 100%;
           max-width: 100vw;
           margin-left: 12px;
-          transition: background-color 0.2s ease;
+          transition: background-color 0.3s ease;
         }
         .tab-container::-webkit-scrollbar {
           display: none;
@@ -234,14 +234,14 @@ export function TabContainer({
           color: var(--text-color-primary);
           font-weight: bold;
           background: transparent;
-          transition: color 0.2s ease;
+          transition: color 0.3s ease;
         }
         .tab-slider {
           position: absolute;
           height: 40px;
           border-radius: 20px;
           background: var(--bg-color-secondary);
-          transition: left 0.25s ease-out, width 0.25s ease-out, background-color 0.2s ease;
+          transition: left 0.25s ease-out, width 0.25s ease-out, background-color 0.3s ease;
           z-index: 1;
           bottom: 22.5px;
         }

@@ -144,7 +144,7 @@ export function ColorPickerMenuItem() {
           border-radius: 50%;
           border: 1px solid var(--border-color-secondary);
           cursor: pointer;
-          transition: box-shadow 0.2s ease, transform 0.2s ease;
+          transition: box-shadow 0.3s ease, transform 0.3s ease;
         }
         .color-display:hover {
           transform: scale(1.05);

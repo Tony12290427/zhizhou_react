@@ -594,7 +594,7 @@ export default function Publish() {
         .draft-box-btn, .manage-btn {
           display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem;
           background: var(--primary-color); color: white; border: none; border-radius: 6px;
-          cursor: pointer; font-size: 0.9rem; font-weight: 500; transition: all 0.2s ease;
+          cursor: pointer; font-size: 0.9rem; font-weight: 500; transition: all 0.3s ease;
         }
         .draft-box-btn:hover, .manage-btn:hover { background: var(--primary-color-dark); }
         .page-title { font-size: 1.2rem; font-weight: 600; margin: 0; color: var(--text-color-primary); }
@@ -602,14 +602,14 @@ export default function Publish() {
         .publish-form { display: flex; flex-direction: column; gap: 1rem; }
         .upload-section { margin-bottom: 0.5rem; }
         .upload-tabs { display: flex; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color-primary); }
-        .tab-btn { padding: 12px 24px; border: none; background: transparent; color: var(--text-color-secondary); font-size: 14px; font-weight: 500; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s ease; }
+        .tab-btn { padding: 12px 24px; border: none; background: transparent; color: var(--text-color-secondary); font-size: 14px; font-weight: 500; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.3s ease; }
         .tab-btn:hover { color: var(--text-color-primary); }
         .tab-btn.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
         .upload-content { margin-bottom: 1rem; }
         .image-grid { display: flex; flex-wrap: wrap; gap: 8px; }
         .image-item { position: relative; width: 100px; height: 100px; border-radius: 8px; overflow: hidden; }
         .image-item img { width: 100%; height: 100%; object-fit: cover; }
-        .image-add-btn, .video-add-btn { width: 100px; height: 100px; border: 2px dashed var(--border-color-primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 32px; color: var(--text-color-secondary); transition: all 0.2s ease; }
+        .image-add-btn, .video-add-btn { width: 100px; height: 100px; border: 2px dashed var(--border-color-primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 32px; color: var(--text-color-secondary); transition: all 0.3s ease; }
         .image-add-btn:hover, .video-add-btn:hover { border-color: var(--primary-color); color: var(--primary-color); }
         .remove-btn { position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; border: none; border-radius: 50%; background: rgba(0,0,0,0.5); color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; line-height: 1; }
         .video-preview { position: relative; }
@@ -622,7 +622,7 @@ export default function Publish() {
         .title-input {
           width: 100%; padding: 10px; border: 1px solid var(--border-color-primary); border-radius: 8px;
           background: var(--bg-color-primary); color: var(--text-color-primary); font-size: 16px; font-weight: bold;
-          transition: all 0.2s ease; box-sizing: border-box;
+          transition: all 0.3s ease; box-sizing: border-box;
         }
         .title-input:focus { outline: none; border-color: var(--primary-color); }
         .title-input::placeholder { color: var(--text-color-secondary); }
@@ -637,7 +637,7 @@ export default function Publish() {
           content: attr(data-placeholder); color: var(--text-color-secondary); pointer-events: none;
         }
         .content-actions { position: absolute; bottom: 0.5rem; left: 1rem; display: flex; align-items: center; gap: 8px; }
-        .emoji-btn, .mention-btn { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border: none; background: transparent; color: var(--text-color-secondary); border-radius: 50%; cursor: pointer; transition: all 0.2s ease; font-size: 18px; }
+        .emoji-btn, .mention-btn { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border: none; background: transparent; color: var(--text-color-secondary); border-radius: 50%; cursor: pointer; transition: all 0.3s ease; font-size: 18px; }
         .emoji-btn:hover, .mention-btn:hover { background: var(--bg-color-secondary); color: var(--text-color-primary); }
         .emoji-panel-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: transparent; display: flex; align-items: center; justify-content: center; z-index: 1000; animation: fadeIn 0.2s ease; }
         .emoji-panel { background: var(--bg-color-primary); border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); overflow: hidden; animation: scaleIn 0.2s ease; max-width: 90vw; max-height: 80vh; }
@@ -648,10 +648,10 @@ export default function Publish() {
         .section-title { font-size: 0.9rem; font-weight: 500; color: var(--text-color-primary); margin-bottom: 0.75rem; }
         .category-section { margin-bottom: 1rem; }
         .publish-actions { display: flex; justify-content: center; align-items: center; gap: 1rem; padding: 2rem 1rem; margin-top: 2rem; background: var(--bg-color-primary); }
-        .draft-btn { width: 20%; padding: 12px; background-color: var(--text-color-secondary); color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: 500; cursor: pointer; transition: background-color 0.2s ease; display: flex; align-items: center; justify-content: center; }
+        .draft-btn { width: 20%; padding: 12px; background-color: var(--text-color-secondary); color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: 500; cursor: pointer; transition: background-color 0.3s ease; display: flex; align-items: center; justify-content: center; }
         .draft-btn:hover:not(:disabled) { background: var(--text-color-primary); }
         .draft-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .publish-btn { width: 20%; padding: 12px; background-color: var(--primary-color); color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: 500; cursor: pointer; transition: background-color 0.2s ease; display: flex; align-items: center; justify-content: center; }
+        .publish-btn { width: 20%; padding: 12px; background-color: var(--primary-color); color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: 500; cursor: pointer; transition: background-color 0.3s ease; display: flex; align-items: center; justify-content: center; }
         .publish-btn:hover:not(:disabled) { background: var(--primary-color-dark); }
         .publish-btn:disabled { opacity: 0.5; cursor: not-allowed; }
         @media (max-width: 960px) { .publish-container { min-width: 100%; max-width: 100%; margin: 72px 0; } .publish-header { padding: 0.75rem 1rem; } .header-right { gap: 0.5rem; } .draft-box-btn, .manage-btn { padding: 0.4rem 0.8rem; font-size: 0.8rem; } .publish-content { padding: 0.75rem; } .publish-actions { padding: 1rem 0.75rem; } }

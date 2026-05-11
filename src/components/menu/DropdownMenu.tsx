@@ -161,7 +161,7 @@ export function DropdownMenu({
           font-size: 16px;
           line-height: 1;
           cursor: pointer;
-          transition: background-color 0.2s ease;
+          transition: background-color 0.3s ease;
           border-radius: 8px;
           margin: 2px 4px;
           box-sizing: border-box;
@@ -218,7 +218,7 @@ export function DropdownMenu({
           font-size: 16px;
           line-height: 1;
           cursor: pointer;
-          transition: background-color 0.2s ease;
+          transition: background-color 0.3s ease;
           border-radius: 8px;
           margin: 2px 4px;
           box-sizing: border-box;

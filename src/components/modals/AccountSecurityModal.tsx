@@ -174,7 +174,7 @@ export function AccountSecurityModal() {
             justify-content: center;
             cursor: pointer;
             z-index: 1;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
           }
           .close-btn:hover {
             opacity: 0.8;
@@ -195,7 +195,7 @@ export function AccountSecurityModal() {
             border: 1px solid var(--border-color-primary);
             border-radius: 8px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             background: var(--bg-color-primary);
           }
           .security-item:hover {

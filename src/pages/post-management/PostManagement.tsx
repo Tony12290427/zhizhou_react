@@ -313,7 +313,7 @@ export default function PostManagement() {
           width: 100%; padding: 0.75rem 0.75rem 0.75rem 2.5rem;
           border: 1px solid var(--border-color-primary); border-radius: 8px;
           background: var(--bg-color-primary); color: var(--text-color-primary);
-          font-size: 0.9rem; transition: all 0.2s ease; box-sizing: border-box;
+          font-size: 0.9rem; transition: all 0.3s ease; box-sizing: border-box;
           caret-color: var(--primary-color);
         }
         .search-box input:focus { outline: none; border-color: var(--primary-color); }
@@ -331,7 +331,7 @@ export default function PostManagement() {
         .create-btn {
           display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem;
           background: var(--primary-color); color: white; border: none; border-radius: 6px;
-          cursor: pointer; font-size: 0.9rem; font-weight: 500; margin-top: 1rem; transition: all 0.2s ease;
+          cursor: pointer; font-size: 0.9rem; font-weight: 500; margin-top: 1rem; transition: all 0.3s ease;
         }
         .create-btn:hover { background: var(--primary-color-dark); }
         .posts-list { display: flex; flex-direction: column; gap: 1rem; }
@@ -339,7 +339,7 @@ export default function PostManagement() {
         .page-btn {
           padding: 0.5rem 1rem; border: 1px solid var(--border-color-primary);
           background: var(--bg-color-primary); color: var(--text-color-primary);
-          border-radius: 4px; cursor: pointer; transition: all 0.2s ease;
+          border-radius: 4px; cursor: pointer; transition: all 0.3s ease;
         }
         .page-btn:hover:not(:disabled) { background: var(--primary-color); color: white; border-color: var(--primary-color); }
         .page-btn:disabled { opacity: 0.5; cursor: not-allowed; }

@@ -171,7 +171,7 @@ export function FollowButton({
           width: 96px;
           height: 40px;
           text-align: center;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
           user-select: none;
           outline: none;
         }

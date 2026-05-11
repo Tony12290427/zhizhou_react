@@ -504,7 +504,7 @@ export default function DataTable<T extends { id: number | string }>({
           background: var(--dt-bg);
           box-sizing: border-box;
           outline: none;
-          transition: border-color 0.2s;
+          transition: border-color 0.3s;
         }
         .dt-search-input:focus {
           border-color: var(--dt-primary);
@@ -535,7 +535,7 @@ export default function DataTable<T extends { id: number | string }>({
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          transition: all 0.2s;
+          transition: all 0.3s;
           font-weight: 500;
           white-space: nowrap;
         }

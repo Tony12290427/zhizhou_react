@@ -122,7 +122,7 @@ export default function CropModal({ visible, imageSrc, uploading, onClose, onCon
           justify-content: center; border-radius: 50%; width: 30px; height: 30px;
           border: none; cursor: pointer; padding: 5px; color: var(--text-color-primary);
         }
-        .close-btn:hover { color: var(--text-color-secondary); transform: scale(1.1); transition: all 0.2s ease; }
+        .close-btn:hover { color: var(--text-color-secondary); transform: scale(1.1); transition: all 0.3s ease; }
         .close-btn svg { width: 16px; height: 16px; }
         .modal-body { padding: 20px; flex: 1; overflow-y: auto; min-height: 0; }
         .modal-footer { flex-shrink: 0; background: var(--bg-color-primary); border-top: 1px solid var(--border-color-primary); padding: 20px 30px; }
@@ -130,7 +130,7 @@ export default function CropModal({ visible, imageSrc, uploading, onClose, onCon
         .btn {
           padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;
           font-size: 14px; display: inline-flex; align-items: center; gap: 6px;
-          transition: all 0.2s; text-decoration: none;
+          transition: all 0.3s; text-decoration: none;
         }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .btn-primary { background-color: var(--primary-color); color: white; }

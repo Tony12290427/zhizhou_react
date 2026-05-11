@@ -472,7 +472,7 @@ export default function SearchResult() {
           padding-top: 72px;
           min-height: 100vh;
           background: var(--bg-color-primary);
-          transition: background 0.2s ease;
+          transition: background 0.3s ease;
         }
         .search-main {
           padding: 0px 10px calc(48px + env(safe-area-inset-bottom, 0px)) 10px;
@@ -480,7 +480,7 @@ export default function SearchResult() {
           box-sizing: border-box;
           overflow-x: hidden;
           background: var(--bg-color-primary);
-          transition: margin-top 0.3s ease, background 0.2s ease;
+          transition: margin-top 0.3s ease, background 0.3s ease;
         }
         .search-main.with-loading {
           margin-top: 40px;
@@ -504,7 +504,7 @@ export default function SearchResult() {
           color: var(--text-color-secondary);
           font-size: 13px;
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
         }
         .tag-chip:hover {
           background: var(--bg-color-secondary);
@@ -524,7 +524,7 @@ export default function SearchResult() {
           gap: 12px;
           padding: 12px 16px;
           cursor: pointer;
-          transition: background-color 0.2s;
+          transition: background-color 0.3s;
         }
         .user-item:hover {
           background: var(--bg-color-secondary);
@@ -614,7 +614,7 @@ export default function SearchResult() {
           border-radius: 10px;
           text-decoration: none;
           color: inherit;
-          transition: background-color 0.2s ease, border-color 0.2s ease;
+          transition: background-color 0.3s ease, border-color 0.3s ease;
           cursor: pointer;
         }
         .ai-article-card:hover {

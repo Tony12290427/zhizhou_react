@@ -341,7 +341,7 @@ export default function UserProfile() {
         .user-desc { margin: 17px 0px 0px; color: var(--text-color-primary); font-size: 14px; padding: 0 16px; }
         .user-interactions { display: flex; padding: 0 16px; flex-wrap: wrap; width: 100%; }
         .user-interactions div { display: flex; flex-direction: column; margin-right: 16px; margin-top: 20px; }
-        .interaction-item { cursor: pointer; padding: 4px 8px; border-radius: 8px; transition: background-color 0.2s ease; }
+        .interaction-item { cursor: pointer; padding: 4px 8px; border-radius: 8px; transition: background-color 0.3s ease; }
         .interaction-item:hover { background-color: var(--bg-color-secondary); }
         .interaction-item:last-child { cursor: default; }
         .interaction-item:last-child:hover { background-color: transparent; }

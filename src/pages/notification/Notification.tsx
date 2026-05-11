@@ -557,10 +557,10 @@ export default function Notification() {
         .loading-text { color: var(--text-color-secondary); font-size: 14px; }
         .notification-main { max-width: 700px; margin: 0 auto; padding: 0 16px; background-color: var(--bg-color-primary); }
         .floating-mark-read-btn-wrapper { position: fixed; bottom: 60px; right: 12px; z-index: 999; cursor: pointer; display: inline-block; }
-        .floating-mark-read-btn { display: flex; justify-content: center; align-items: center; width: 38px; height: 38px; border-radius: 50%; background-color: var(--bg-color-primary); border: 1px solid var(--border-color-primary); transition: all 0.2s ease; }
+        .floating-mark-read-btn { display: flex; justify-content: center; align-items: center; width: 38px; height: 38px; border-radius: 50%; background-color: var(--bg-color-primary); border: 1px solid var(--border-color-primary); transition: all 0.3s ease; }
         .floating-mark-read-btn:hover { background-color: var(--bg-color-secondary); }
         .mark-read-icon { color: var(--text-color-secondary); font-size: 14px; font-weight: bold; }
-        .floating-mark-read-btn-wrapper .tooltip { position: absolute; right: 50px; top: 50%; transform: translateY(-50%); background: var(--bg-color-primary); color: var(--text-color-primary); padding: 4px 8px; border-radius: 6px; font-size: 12px; white-space: nowrap; opacity: 0; visibility: hidden; transition: opacity 0.2s ease, visibility 0.2s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border: 1px solid var(--border-color-primary); z-index: 10; pointer-events: none; }
+        .floating-mark-read-btn-wrapper .tooltip { position: absolute; right: 50px; top: 50%; transform: translateY(-50%); background: var(--bg-color-primary); color: var(--text-color-primary); padding: 4px 8px; border-radius: 6px; font-size: 12px; white-space: nowrap; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border: 1px solid var(--border-color-primary); z-index: 10; pointer-events: none; }
         .floating-mark-read-btn-wrapper:hover .tooltip { opacity: 1; visibility: visible; }
         .content-wrapper { transition: margin-top 0.3s ease; }
         .content-wrapper.with-loading { margin-top: 40px; }

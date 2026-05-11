@@ -6,7 +6,7 @@
   background: var(--bg-color-primary);
   border-radius: 8px;
   border: 1px solid var(--border-color-primary);
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .post-upper {
@@ -192,7 +192,7 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.8rem;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .edit-btn {

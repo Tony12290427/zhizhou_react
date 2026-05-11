@@ -108,7 +108,7 @@ export function ThemeSwitcherMenuItem() {
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
           z-index: 2;
           color: var(--text-color-tertiary);
         }
@@ -131,7 +131,7 @@ export function ThemeSwitcherMenuItem() {
           white-space: nowrap;
           opacity: 0;
           visibility: hidden;
-          transition: opacity 0.2s ease, visibility 0.2s ease;
+          transition: opacity 0.3s ease, visibility 0.3s ease;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
           border: 1px solid var(--border-color-primary);
           z-index: 10;

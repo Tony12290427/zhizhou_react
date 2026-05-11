@@ -138,7 +138,7 @@ export function MbtiPicker({
           cursor: pointer;
           padding: 4px 8px;
           border-radius: 4px;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
           line-height: 1;
         }
         .clear-btn:hover {
@@ -178,7 +178,7 @@ export function MbtiPicker({
           padding: 10px 5px;
           text-align: center;
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
           font-size: 18px;
           font-weight: 500;
         }

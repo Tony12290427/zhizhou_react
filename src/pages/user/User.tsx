@@ -359,7 +359,7 @@ export default function User() {
         .user-desc { margin: 17px 0px 0px; color: var(--text-color-primary); font-size: 14px; padding: 0 16px; }
         .user-interactions { display: flex; padding: 0 16px; flex-wrap: wrap; width: 100%; }
         .user-interactions div { display: flex; flex-direction: column; margin-right: 16px; margin-top: 20px; }
-        .interaction-item { cursor: pointer; padding: 4px 8px; border-radius: 8px; transition: background-color 0.2s ease; }
+        .interaction-item { cursor: pointer; padding: 4px 8px; border-radius: 8px; transition: background-color 0.3s ease; }
         .interaction-item:hover { background-color: var(--bg-color-secondary); }
         .interaction-item:last-child { cursor: default; }
         .interaction-item:last-child:hover { background-color: transparent; }
@@ -374,7 +374,7 @@ export default function User() {
         .fixedTab .tab-slider { top: 16px; width: 64px; height: 40px; border-radius: 999px; background: var(--bg-color-secondary); transition: left 0.3s cubic-bezier(.4, 0, .2, 1); z-index: 0; }
         .hidden { display: none; }
         .edit-profile-button-wrapper { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); }
-        .edit-profile-btn { padding: 3px 16px; border: 1px solid var(--text-color-quaternary); border-radius: 20px; font-size: 14px; font-weight: bold; cursor: pointer; width: 90px; height: 40px; text-align: center; transition: all 0.2s ease; user-select: none; background: #aeadad0d; color: var(--text-color-tertiary); }
+        .edit-profile-btn { padding: 3px 16px; border: 1px solid var(--text-color-quaternary); border-radius: 20px; font-size: 14px; font-weight: bold; cursor: pointer; width: 90px; height: 40px; text-align: center; transition: all 0.3s ease; user-select: none; background: #aeadad0d; color: var(--text-color-tertiary); }
         .edit-profile-btn:hover { background: #6e6e6e2c; color: var(--text-color-secondary); border-color: var(--text-color-tertiary); }
         @media (min-width: 901px) {
           .user-info { max-width: 650px; margin: 0 auto; padding: 16px 0px; }

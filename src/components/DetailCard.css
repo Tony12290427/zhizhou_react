@@ -468,7 +468,7 @@
 }
 
 .clickable-tag {
-  transition: color 0.2s ease, opacity 0.2s ease;
+  transition: color 0.3s ease, opacity 0.3s ease;
 }
 
 .clickable-tag:hover {
@@ -525,7 +525,7 @@
 
 .sort-icon {
   color: var(--text-color-secondary);
-  transition: transform 0.2s ease, color 0.2s ease;
+  transition: transform 0.3s ease, color 0.3s ease;
 }
 
 .sort-menu {
@@ -551,7 +551,7 @@
   cursor: pointer;
   font-size: 14px;
   color: var(--text-color-primary);
-  transition: background-color 0.2s ease;
+  transition: background-color 0.3s ease;
   border-radius: 8px;
 }
 
@@ -713,7 +713,7 @@
   cursor: pointer;
   padding: 0 8px;
   margin-left: 8px;
-  transition: opacity 0.2s;
+  transition: opacity 0.3s;
 }
 
 .comment-delete-btn:hover {
@@ -756,7 +756,7 @@
 
 .comment-replay-icon {
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   padding: 2px;
   border-radius: 4px;
 }
@@ -780,7 +780,7 @@
   cursor: pointer;
   padding: 4px;
   border-radius: 4px;
-  transition: color 0.2s ease;
+  transition: color 0.3s ease;
 }
 
 .comment-reply:hover {
@@ -910,7 +910,7 @@
   cursor: pointer;
   padding: 4px;
   border-radius: 4px;
-  transition: color 0.2s ease;
+  transition: color 0.3s ease;
 }
 
 .reply-reply:hover {
@@ -931,7 +931,7 @@
   cursor: pointer;
   padding: 4px 8px;
   border-radius: 12px;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   font-weight: 500;
 }
 
@@ -1123,7 +1123,7 @@
   font-size: 14px;
   line-height: 1.4;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   font-weight: bold;
   white-space: nowrap;
 }
@@ -1152,7 +1152,7 @@
   line-height: 1.4;
   cursor: pointer;
   font-weight: bold;
-  transition: all 0.2s;
+  transition: all 0.3s;
   white-space: nowrap;
 }
 

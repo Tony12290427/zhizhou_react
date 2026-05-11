@@ -246,7 +246,7 @@ export function UserInfoCard({
           z-index: 1000;
           box-sizing: border-box;
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
         }
         .card-header {
           display: flex;

@@ -101,7 +101,7 @@ export function LikeButton({
           border: none;
           cursor: pointer;
           color: var(--text-color-secondary);
-          transition: color 0.2s ease;
+          transition: color 0.3s ease;
           padding: 0;
           border-radius: 4px;
         }

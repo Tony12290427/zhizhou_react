@@ -173,7 +173,7 @@ export function DropdownSelect({
           border-radius: 8px;
           background: var(--bg-color-primary);
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
         }
         .dropdown-toggle:hover {
           border-color: var(--border-color-secondary);
@@ -200,7 +200,7 @@ export function DropdownSelect({
         }
         .dropdown-arrow {
           color: var(--text-color-secondary);
-          transition: transform 0.2s ease;
+          transition: transform 0.3s ease;
           flex-shrink: 0;
         }
         .dropdown-arrow.rotated {
@@ -226,7 +226,7 @@ export function DropdownSelect({
           align-items: center;
           padding: 12px;
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
           border-radius: 6px;
           margin-bottom: 4px;
         }
