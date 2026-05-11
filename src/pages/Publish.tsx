@@ -576,7 +576,7 @@ export default function Publish() {
           margin: 72px auto;
           min-width: 700px;
           max-width: 700px;
-          transition: background-color 0.2s ease;
+          transition: background-color 0.3s ease;
         }
         .publish-header {
           display: flex;

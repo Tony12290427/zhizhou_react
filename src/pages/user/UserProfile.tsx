@@ -285,9 +285,7 @@ export default function UserProfile() {
           max-width: 1200px;
           background: var(--bg-color-primary);
           min-height: 100vh;
-          transition: background-color 0.2s ease;
-        }
-        .user-info {
+          transition: background-color 0.3s ease;
           height: auto;
           min-height: 196px;
           padding: 16px 0;

@@ -334,9 +334,7 @@ export default function User() {
           max-width: 1200px;
           background: var(--bg-color-primary);
           min-height: 100vh;
-          transition: background-color 0.2s ease;
-        }
-        .content-switch-container {
+          transition: background-color 0.3s ease;
           width: 100%;
           max-width: 1200px;
           background: var(--bg-color-primary);

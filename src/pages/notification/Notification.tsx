@@ -552,7 +552,7 @@ export default function Notification() {
       )}
 
       <style>{`
-        .content-container { background-color: var(--bg-color-primary); padding-top: 144px; transition: background 0.2s ease; }
+        .content-container { background-color: var(--bg-color-primary); padding-top: 144px; transition: background 0.3s ease; }
         .loading-container { display: flex; align-items: center; justify-content: center; gap: 16px; padding: 20px 16px; flex-direction: row; position: fixed; top: 129px; left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: 700px; z-index: 100; background-color: var(--bg-color-primary); }
         .loading-text { color: var(--text-color-secondary); font-size: 14px; }
         .notification-main { max-width: 700px; margin: 0 auto; padding: 0 16px; background-color: var(--bg-color-primary); }
