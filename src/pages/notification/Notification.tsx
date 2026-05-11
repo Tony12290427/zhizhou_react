@@ -117,28 +117,28 @@ export default function Notification() {
     try {
       const params = { page: isLoadMore ? tabPagination.page : 1, limit: PAGE_SIZE }
       const response = await getCommentNotifications(params)
-      const notifications = response.data?.notifications || []
+      const notifications = (response as any)?.items || (response as any)?.data?.notifications || []
 
       const transformed = notifications.map((item: any) => ({
         notificationId: item.id,
-        id: item.from_user_id,
-        autoId: item.from_user_auto_id,
-        username: item.from_nickname || '未知用户',
-        avatar: item.from_avatar || DEFAULT_AVATAR,
-        verified: item.from_verified || 0,
-        action: item.title || '评论了你的笔记',
-        time: formatTime(item.created_at),
-        content: item.type === 8 ? '点击查看详情' : (item.comment_content || '原评论已删除'),
-        postImage: item.post_image || '/default-post.png',
-        target_id: item.target_id,
-        commentId: item.comment_id,
-        isLiked: item.comment_is_liked === 1,
-        likeCount: item.comment_like_count || 0,
-        postAuthorId: item.post_author_id,
-        isRead: item.is_read === 1,
+        id: String(item.actorId ?? item.from_user_id ?? ''),
+        autoId: item.actorId ?? item.from_user_auto_id,
+        username: item.actorNickname || item.from_nickname || '未知用户',
+        avatar: item.actorAvatar || item.from_avatar || DEFAULT_AVATAR,
+        verified: item.actorVerified || item.from_verified || 0,
+        action: item.title || (item.type === 5 ? '回复了你的评论' : item.type === 8 ? '@了你' : '评论了你的笔记'),
+        time: formatTime(item.createdAt || item.created_at),
+        content: item.type === 8 ? '点击查看详情' : (item.commentContent || item.comment_content || '原评论已删除'),
+        postImage: item.postImage || item.post_image || '/default-post.png',
+        target_id: item.postId ?? item.target_id,
+        commentId: item.commentId ?? item.comment_id,
+        isLiked: (item.commentIsLiked ?? item.comment_is_liked) === 1,
+        likeCount: item.commentLikeCount || item.comment_like_count || 0,
+        postAuthorId: item.postAuthorId ?? item.post_author_id,
+        isRead: item.isRead ?? item.is_read === 1,
         isFollowing: false,
         isReplyComment: item.type === 5,
-        parentCommentContent: item.parent_comment_content || (item.type === 5 ? '原评论已删除' : ''),
+        parentCommentContent: item.parentCommentContent || item.parent_comment_content || (item.type === 5 ? '原评论已删除' : ''),
       }))
 
       if (isLoadMore) {
@@ -171,21 +171,21 @@ export default function Notification() {
     try {
       const params = { page: isLoadMore ? tabPagination.page : 1, limit: PAGE_SIZE }
       const response = await getLikeNotifications(params)
-      const transformed = (response.data?.notifications || []).map((item: any) => ({
+      const transformed = ((response as any)?.items || (response as any)?.data?.notifications || []).map((item: any) => ({
         notificationId: item.id,
-        id: item.from_user_id,
-        autoId: item.from_user_auto_id,
-        username: item.from_nickname || '未知用户',
-        avatar: item.from_avatar || DEFAULT_AVATAR,
-        verified: item.from_verified || 0,
+        id: String(item.actorId ?? item.from_user_id ?? ''),
+        autoId: item.actorId ?? item.from_user_auto_id,
+        username: item.actorNickname || item.from_nickname || '未知用户',
+        avatar: item.actorAvatar || item.from_avatar || DEFAULT_AVATAR,
+        verified: item.actorVerified || item.from_verified || 0,
         action: item.title || '点赞了你的内容',
-        time: formatTime(item.created_at),
-        postImage: item.post_image || '/default-post.png',
-        target_id: item.target_id,
-        target_type: item.target_type,
-        commentId: item.comment_id,
-        postAuthorId: item.post_author_id,
-        isRead: item.is_read === 1,
+        time: formatTime(item.createdAt || item.created_at),
+        postImage: item.postImage || item.post_image || '/default-post.png',
+        target_id: item.postId ?? item.target_id,
+        target_type: item.targetType ?? item.target_type,
+        commentId: item.commentId ?? item.comment_id,
+        postAuthorId: item.postAuthorId ?? item.post_author_id,
+        isRead: item.isRead ?? item.is_read === 1,
         isFollowing: false,
       }))
 
@@ -218,18 +218,18 @@ export default function Notification() {
     try {
       const params = { page: isLoadMore ? tabPagination.page : 1, limit: PAGE_SIZE }
       const response = await getCollectionNotifications(params)
-      const transformed = (response.data?.notifications || []).map((item: any) => ({
+      const transformed = ((response as any)?.items || (response as any)?.data?.notifications || []).map((item: any) => ({
         notificationId: item.id,
-        id: item.from_user_id,
-        autoId: item.from_user_auto_id,
-        username: item.from_nickname || '未知用户',
-        avatar: item.from_avatar || DEFAULT_AVATAR,
-        verified: item.from_verified || 0,
+        id: String(item.actorId ?? item.from_user_id ?? ''),
+        autoId: item.actorId ?? item.from_user_auto_id,
+        username: item.actorNickname || item.from_nickname || '未知用户',
+        avatar: item.actorAvatar || item.from_avatar || DEFAULT_AVATAR,
+        verified: item.actorVerified || item.from_verified || 0,
         action: item.title || '收藏了你的笔记',
-        time: formatTime(item.created_at),
-        postImage: item.post_image || '/default-post.png',
-        target_id: item.target_id,
-        isRead: item.is_read === 1,
+        time: formatTime(item.createdAt || item.created_at),
+        postImage: item.postImage || item.post_image || '/default-post.png',
+        target_id: item.postId ?? item.target_id,
+        isRead: item.isRead ?? item.is_read === 1,
         isFollowing: false,
       }))
 
@@ -262,21 +262,21 @@ export default function Notification() {
     try {
       const params = { page: isLoadMore ? tabPagination.page : 1, limit: PAGE_SIZE }
       const response = await getFollowNotifications(params)
-      const transformed = (response.data?.notifications || []).map((item: any) => {
+      const transformed = ((response as any)?.items || (response as any)?.data?.notifications || []).map((item: any) => {
         let actionText = item.title || 'Ta关注了你'
         return {
           notificationId: item.id,
-          id: item.from_user_id,
-          from_user_id: item.from_user_id,
-          autoId: item.from_user_auto_id,
-          username: item.from_nickname || '未知用户',
-          avatar: item.from_avatar || DEFAULT_AVATAR,
-          verified: item.from_verified || 0,
+          id: String(item.actorId ?? item.from_user_id ?? ''),
+          from_user_id: String(item.actorId ?? item.from_user_id ?? ''),
+          autoId: item.actorId ?? item.from_user_auto_id,
+          username: item.actorNickname || item.from_nickname || '未知用户',
+          avatar: item.actorAvatar || item.from_avatar || DEFAULT_AVATAR,
+          verified: item.actorVerified || item.from_verified || 0,
           action: actionText,
-          time: formatTime(item.created_at),
-          followCount: item.follow_count || 0,
-          fansCount: item.fans_count || 0,
-          isRead: item.is_read === 1,
+          time: formatTime(item.createdAt || item.created_at),
+          followCount: item.followCount || item.follow_count || 0,
+          fansCount: item.fansCount || item.fans_count || 0,
+          isRead: item.isRead ?? item.is_read === 1,
           isFollowing: false,
           isMutual: false,
           buttonType: 'follow',
