@@ -180,9 +180,12 @@ export async function uncollectPost(_postId: number) {
 
 // Presigned URL upload helper
 async function uploadViaPresign(file: File): Promise<string> {
+  const ext = file.name.includes('.') ? file.name.substring(file.name.lastIndexOf('.')) : '.png'
   const presign: any = await request.post('/storage/presign', {
-    filename: file.name,
+    scene: 'posts',
+    postId: 'draft',
     contentType: file.type || 'image/png',
+    ext,
   })
   if (!presign.url && !presign.uploadUrl) {
     throw new Error('No presigned upload URL returned')
