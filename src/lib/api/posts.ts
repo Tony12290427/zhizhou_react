@@ -187,10 +187,10 @@ async function uploadViaPresign(file: File): Promise<string> {
     contentType: file.type || 'image/png',
     ext,
   })
-  if (!presign.url && !presign.uploadUrl) {
+  const uploadUrl = presign.putUrl || presign.url || presign.uploadUrl
+  if (!uploadUrl) {
     throw new Error('No presigned upload URL returned')
   }
-  const uploadUrl = presign.url || presign.uploadUrl
   await fetch(uploadUrl, {
     method: 'PUT',
     body: file,
@@ -237,19 +237,28 @@ export async function createPost(postData: Record<string, unknown>): Promise<{ s
       }
     }
 
-    // Step 4: Confirm content
+    // Step 4: Update post metadata
     const tags = (postData.tags as string[]) || []
-    await request.post(`/knowposts/${postId}/content/confirm`, {
+    await request.patch(`/knowposts/${postId}`, {
       title: postData.title,
-      content: postData.content,
       description: String(postData.content || '').substring(0, 200),
+      tags: JSON.stringify(tags),
       imgUrls: JSON.stringify(imageUrls),
       videoUrl: videoUrl || null,
-      tags: JSON.stringify(tags),
       category: postData.category_id || 'general',
     })
 
-    // Step 5: Publish
+    // Step 5: Confirm content (file upload metadata — send correct DTO fields)
+    if (imageUrls.length > 0) {
+      await request.post(`/knowposts/${postId}/content/confirm`, {
+        objectKey: imageUrls[0].split('/uploads/')[1] || '',
+        etag: '',
+        size: 0,
+        sha256: '',
+      })
+    }
+
+    // Step 6: Publish
     await request.post(`/knowposts/${postId}/publish`)
     return { success: true, data: { id: postId }, message: '发布成功' }
   } catch (error: any) {
