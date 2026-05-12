@@ -268,8 +268,19 @@ export async function createPost(postData: Record<string, unknown>): Promise<{ s
   }
 }
 
-export async function getUserPosts(_params: Record<string, unknown> = {}) {
-  return { success: false, data: { posts: [], pagination: { page: 1, pages: 1, total: 0 } } }
+export async function getUserPosts(params: Record<string, unknown> = {}) {
+  try {
+    const data: any = await request.get('/knowposts/mine', {
+      params: {
+        page: params.page || 1,
+        size: params.limit || 10,
+      },
+    })
+    const posts = (data?.items || data?.data || []).map(transformPostData)
+    return { success: true, data: { posts, pagination: { page: Number(params.page) || 1, pages: Math.ceil((data?.total || posts.length) / (Number(params.limit) || 10)), total: data?.total || posts.length } } }
+  } catch {
+    return { success: false, data: { posts: [], pagination: { page: 1, pages: 1, total: 0 } } }
+  }
 }
 
 export async function updatePost(postId: number, data: Record<string, unknown>) {
