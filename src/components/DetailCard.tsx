@@ -314,15 +314,15 @@ const DetailCard: React.FC<DetailCardFullProps> = memo(({
     () => likeStore.getPostLikeState(item.id),
     [item.id, likeStore]
   )
-  const isLiked = likeData.liked || false
-  const likeCount = likeData.likeCount || item.likeCount || item.like_count || 0
+  const isLiked = likeData.liked ?? false
+  const likeCount = likeData.likeCount ?? item.likeCount ?? item.like_count ?? 0
 
   const collectData = useMemo(
     () => collectStore.getPostCollectState(item.id),
     [item.id, collectStore]
   )
-  const isCollected = collectData.collected || false
-  const collectCount = collectData.collectCount || item.collectCount || item.collect_count || 0
+  const isCollected = collectData.collected ?? false
+  const collectCount = collectData.collectCount ?? item.collectCount ?? item.collect_count ?? 0
 
   const contentSectionWidth = useMemo(() => {
     if (isMobile) return windowWidth
