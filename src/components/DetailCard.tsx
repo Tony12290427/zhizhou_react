@@ -1776,6 +1776,39 @@ const DetailCard: React.FC<DetailCardFullProps> = memo(({
 
     const onLikeToggle = (willBeLiked: boolean) => toggleCommentLike(comment, willBeLiked)
 
+    const isDeleted = !!(comment.deletedAt || comment.deleted_at)
+
+    if (isDeleted) {
+      return (
+        <div key={comment.id} className={containerClass} data-comment-id={String(comment.id)}>
+          <div className={isReply ? 'reply-avatar-container' : 'comment-avatar-container'}>
+            <img src={comment.avatar || DEFAULT_AVATAR} alt={comment.username}
+              className={avatarClass} onError={handleAvatarError} />
+          </div>
+          <div className={isReply ? 'reply-content' : 'comment-content'}>
+            <div className={isReply ? 'reply-header' : 'comment-header'}>
+              <span className={isReply ? 'reply-username' : 'comment-username'}>
+                {comment.username}
+              </span>
+            </div>
+            <div className="comment-text" style={{ color: 'var(--text-color-quaternary)', fontStyle: 'italic' }}>
+              原评论已删除
+            </div>
+          </div>
+          {!isReply && comment.replies && comment.replies.length > 0 && (
+            <div className="comment-replies">
+              {comment.replies.map((reply: CommentUser) => renderComment(reply, true))}
+              {comment.reply_count && comment.reply_count > comment.replies.length && (
+                <button className="load-more-replies-btn" onClick={() => loadMoreReplies(comment)}>
+                  加载更多回复
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+      )
+    }
+
     return (
       <div
         key={comment.id}
