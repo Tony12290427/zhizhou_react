@@ -33,7 +33,7 @@ export default function PostDetail() {
   const fetchPostDetail = useCallback(async (id: string) => {
     try {
       setLoading(true)
-      const response = await getPostDetail(Number(id))
+      const response = await getPostDetail(id)
       if (response) {
         setPostData(response)
         document.title = response.title || '笔记详情'

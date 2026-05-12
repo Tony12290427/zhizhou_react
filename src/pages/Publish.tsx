@@ -93,7 +93,7 @@ export default function Publish() {
   // Load draft data
   const loadDraftData = useCallback(async (draftId: string) => {
     try {
-      const response = await getPostDetail(Number(draftId))
+      const response = await getPostDetail(draftId)
       if (response && response.originalData) {
         const draft = response.originalData
         setForm({
