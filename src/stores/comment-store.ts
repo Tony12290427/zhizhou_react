@@ -20,6 +20,7 @@ interface CommentUser {
   reply_count: number
   isReply: boolean
   replyTo?: string
+  deleted_at?: string | null
 }
 
 interface PostCommentData {
@@ -94,6 +95,7 @@ async function fetchAllReplies(
           replies: [],
           isReply: true,
           reply_count: 0,
+          deleted_at: reply.deleted_at || reply.deletedAt || null,
         }
       })
 
@@ -182,6 +184,7 @@ export const useCommentStore = create<CommentState>()(
             replies: [],
             reply_count: comment.reply_count || 0,
             isReply: false,
+            deleted_at: comment.deleted_at || comment.deletedAt || null,
           }))
 
           for (const comment of parentComments) {

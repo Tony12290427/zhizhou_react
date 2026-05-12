@@ -88,6 +88,8 @@ interface CommentUser {
   reply_count: number
   isReply: boolean
   replyTo?: string
+  deleted_at?: string | null
+  deletedAt?: string | null
 }
 
 interface UploadedImage {
@@ -1796,12 +1798,9 @@ const DetailCard: React.FC<DetailCardFullProps> = memo(({
             </div>
           </div>
           {!isReply && comment.replies && comment.replies.length > 0 && (
-            <div className="comment-replies">
-              {comment.replies.map((reply: CommentUser) => renderComment(reply, true))}
-              {comment.reply_count && comment.reply_count > comment.replies.length && (
-                <button className="load-more-replies-btn" onClick={() => loadMoreReplies(comment)}>
-                  加载更多回复
-                </button>
+            <div className="replies-list">
+              {getDisplayedReplies(comment.replies, comment.id).map(reply =>
+                renderComment(reply, true)
               )}
             </div>
           )}
