@@ -1797,13 +1797,6 @@ const DetailCard: React.FC<DetailCardFullProps> = memo(({
               原评论已删除
             </div>
           </div>
-          {!isReply && comment.replies && comment.replies.length > 0 && (
-            <div className="replies-list">
-              {getDisplayedReplies(comment.replies, comment.id).map(reply =>
-                renderComment(reply, true)
-              )}
-            </div>
-          )}
         </div>
       )
     }
