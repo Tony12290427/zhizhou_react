@@ -22,6 +22,12 @@ AI 驱动的知识获取与分享社区。前端基于 React 19 + TypeScript 构
 |------|---------|---------|
 | ![通知](docs/screenshots/05-notification.png) | ![暗黑模式](docs/screenshots/06-dark-mode.png) | ![管理后台](docs/screenshots/09-admin-login.png) |
 
+## 功能演示
+
+| Feed 浏览 & 瀑布流滚动 | 发布流程 |
+|----------------------|---------|
+| ![Feed浏览](docs/gifs/01-feed-browse.gif) | ![发布流程](docs/gifs/02-publish-flow.gif) |
+
 ## 技术栈
 
 | 类别 | 技术 | 版本 | 用途 |
