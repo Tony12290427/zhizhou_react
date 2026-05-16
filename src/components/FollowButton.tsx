@@ -49,11 +49,12 @@ export function FollowButton({
   const currentFollowState = followState.followed
   const currentButtonType = followState.buttonType
 
-  // Sync external isFollowing prop to store
+  // Sync external isFollowing prop to store — but only when store has no state yet.
+  // If store already has state (e.g. from fetchFollowStatus), trust the store over the prop.
   useEffect(() => {
     const key = String(userId)
     const storeState = followStore.getUserFollowState(key)
-    if (!storeState.hasState || storeState.followed !== isFollowing) {
+    if (!storeState.hasState) {
       followStore.initUserFollowState(key, isFollowing)
     }
   }, [userId, isFollowing, followStore])
