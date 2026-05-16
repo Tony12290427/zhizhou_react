@@ -64,7 +64,7 @@ export default function UserProfile() {
   const getUserInfo = useCallback(async () => {
     setLoading(true)
     try {
-      const response = await userApi.getUserInfo(userId)
+      const response = await userApi.getUserInfo(Number(userId))
       // Backend returns ProfileResponse directly (id, nickname, avatar...)
       // without { success, data } wrapper
       if (response && (response as any).nickname) {
@@ -88,7 +88,7 @@ export default function UserProfile() {
   // Fetch user stats
   const getUserStats = useCallback(async () => {
     try {
-      const response = await userApi.getUserStats(userId)
+      const response = await userApi.getUserStats(Number(userId))
       if ((response as any).success) {
         setUserStats((response as any).data)
       }

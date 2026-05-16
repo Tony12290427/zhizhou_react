@@ -6,7 +6,7 @@ interface NavigationState {
   scrollToTop: (behavior?: ScrollBehavior) => void
 }
 
-export const useNavigationStore = create<NavigationState>((set, get) => ({
+export const useNavigationStore = create<NavigationState>((set, _get) => ({
   activeItemId: '',
 
   setActiveItem: (id: string) => {

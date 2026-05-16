@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUserStore } from '@/stores/user-store'
-import { useAuthStore } from '@/stores/auth-store'
+
 import { useNavigationStore } from '@/stores/navigation-store'
 import { userApi } from '@/lib/api'
 import WaterfallFlow from '@/components/WaterfallFlow'
@@ -22,7 +22,6 @@ const TABS = [
 export default function User() {
   const navigate = useNavigate()
   const userStore = useUserStore()
-  const authStore = useAuthStore()
   const navigationStore = useNavigationStore()
 
   const [userStats, setUserStats] = useState<any>({})
@@ -154,7 +153,7 @@ export default function User() {
 
   const handleProfileSaved = useCallback(async (formData: any) => {
     try {
-      const response = await userApi.updateUserInfo(userStore.userInfo?.user_id, formData)
+      const response = await userApi.updateUserInfo(Number(userStore.userInfo?.user_id), formData)
       if ((response as any).success) {
         userStore.updateUserInfo(formData)
         console.log('用户资料更新成功')

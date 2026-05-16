@@ -17,7 +17,7 @@ interface ChannelState {
   getChannelPath: (channelId: string) => string
 }
 
-export const useChannelStore = create<ChannelState>((set, get) => ({
+export const useChannelStore = create<ChannelState>((set, _get) => ({
   channels: getChannels(),
   activeChannelId: 'recommend',
   isLoading: false,

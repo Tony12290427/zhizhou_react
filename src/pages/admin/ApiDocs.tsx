@@ -313,7 +313,7 @@ export default function ApiDocs() {
         <h2 style={{ margin: '0 0 12px 0', fontSize: 26 }}>知舟图文社区 API 接口文档</h2>
         <div style={{ display: 'flex', gap: 24, fontSize: 13, opacity: 0.9, flexWrap: 'wrap' }}>
           <span>版本: v1.3.2</span>
-          <span>基础URL: {import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/'}</span>
+          <span>基础URL: {import.meta.env.VITE_API_BASE_URL || ''}</span>
           <span>更新时间: 2026-02-27</span>
         </div>
       </div>

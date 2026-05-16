@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { CircleUserRound, FileEdit, Bell, Search, Image, Hash, Paintbrush } from 'lucide-react'
+import { CircleUserRound, FileEdit, Search, Hash, Paintbrush } from 'lucide-react'
 
 interface UserPersonalityTagsProps {
   gender?: string

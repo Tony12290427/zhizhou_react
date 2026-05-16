@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom'
+import { createBrowserRouter, Navigate } from 'react-router-dom'
 import Layout from '@/pages/layout/Layout'
 import Explore from '@/pages/explore/Explore'
 import ChannelPage from '@/pages/explore/ChannelPage'
