@@ -5,6 +5,7 @@ import { useAuthStore } from '@/stores/auth-store'
 import { useNavigationStore } from '@/stores/navigation-store'
 import { userApi } from '@/lib/api'
 import WaterfallFlow from '@/components/WaterfallFlow'
+import DetailCard from '@/components/DetailCard'
 import VerifiedBadge from '@/components/VerifiedBadge'
 import ContentRenderer from '@/components/ContentRenderer'
 import BackToTopButton from '@/components/BackToTopButton'
@@ -31,6 +32,8 @@ export default function User() {
   const [activeTab, setActiveTab] = useState('posts')
   const [scrollY, setScrollY] = useState(0)
   const [refreshKeys, setRefreshKeys] = useState({ posts: 0, collections: 0, likes: 0 })
+  const [detailCardVisible, setDetailCardVisible] = useState(false)
+  const [detailCardItem, setDetailCardItem] = useState<any>(null)
 
   const hasLoadedStatsOnce = useRef(false)
   const windowWidthRef = useRef(window.innerWidth)
@@ -125,6 +128,16 @@ export default function User() {
       setTimeout(() => navigationStore.scrollToTop('smooth'), 300)
     }
   }, [navigationStore])
+
+  const handleCardClick = useCallback((item: any) => {
+    setDetailCardItem(item)
+    setDetailCardVisible(true)
+  }, [])
+
+  const handleCloseDetail = useCallback(() => {
+    setDetailCardVisible(false)
+    setDetailCardItem(null)
+  }, [])
 
   const goToFollowList = useCallback((type: string) => {
     navigate(`/follow/${type}`)
@@ -272,6 +285,7 @@ export default function User() {
                 userId={userStore.userInfo.user_id}
                 type="posts"
                 refreshKey={refreshKeys.posts}
+                onCardClick={handleCardClick}
               />
             )}
           </div>
@@ -293,6 +307,7 @@ export default function User() {
                 userId={userStore.userInfo.user_id}
                 type="collections"
                 refreshKey={refreshKeys.collections}
+                onCardClick={handleCardClick}
               />
             )}
           </div>
@@ -307,6 +322,7 @@ export default function User() {
                 userId={userStore.userInfo.user_id}
                 type="likes"
                 refreshKey={refreshKeys.likes}
+                onCardClick={handleCardClick}
               />
             )}
           </div>
@@ -316,6 +332,10 @@ export default function User() {
       <BackToTopButton />
 
       {/* Edit Profile Modal */}
+      {detailCardVisible && detailCardItem && (
+        <DetailCard item={detailCardItem} onClose={handleCloseDetail} />
+      )}
+
       {showEditProfileModal && (
         <EditProfileModal
           visible={showEditProfileModal}
