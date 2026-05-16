@@ -69,10 +69,11 @@ export default function UserProfile() {
       // without { success, data } wrapper
       if (response && (response as any).nickname) {
         setUserInfo(response)
-        await getFollowStatus()
+        await getFollowStatusForUser(response)
       } else if ((response as any).success) {
-        setUserInfo((response as any).data)
-        await getFollowStatus()
+        const data = (response as any).data
+        setUserInfo(data)
+        await getFollowStatusForUser(data)
       } else {
         setUserInfo({})
       }
@@ -96,15 +97,16 @@ export default function UserProfile() {
     }
   }, [userId])
 
-  // Fetch follow status
-  const getFollowStatus = async () => {
-    if (isCurrentUser || !(userInfo.id || userInfo.user_id)) return
+  // Fetch follow status — accepts user object directly since setState is async
+  const getFollowStatusForUser = async (user: any) => {
+    const uid = user.id || user.user_id
+    if (isCurrentUser || !uid) return
     try {
-      const result = await followStore.fetchFollowStatus(userInfo.id || userInfo.user_id)
+      const result = await followStore.fetchFollowStatus(uid)
       if (result.success && result.data) {
         setFollowStatus(result.data.followed)
         followStore.initUserFollowState(
-          userInfo.id || userInfo.user_id,
+          String(uid),
           result.data.followed,
           result.data.isMutual || false,
           result.data.buttonType || 'follow',
@@ -181,7 +183,7 @@ export default function UserProfile() {
               </div>
               {!isCurrentUser && (
                 <div className="follow-button-wrapper">
-                  <FollowButton userId={userInfo.id || userInfo.user_id} isFollowing={followStatus} />
+                  <FollowButton userId={Number(userInfo.id || userInfo.user_id)} isFollowing={followStatus} />
                 </div>
               )}
             </div>
@@ -286,13 +288,7 @@ export default function UserProfile() {
           background: var(--bg-color-primary);
           min-height: 100vh;
           transition: background-color 0.3s ease;
-          height: auto;
-          min-height: 196px;
-          padding: 16px 0;
-          width: 100%;
-          max-width: 1200px;
           overflow-x: hidden;
-          background: var(--bg-color-primary);
         }
         .basic-info {
           display: flex;

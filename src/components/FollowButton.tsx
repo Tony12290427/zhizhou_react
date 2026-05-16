@@ -51,9 +51,10 @@ export function FollowButton({
 
   // Sync external isFollowing prop to store
   useEffect(() => {
-    const storeState = followStore.getUserFollowState(userId)
+    const key = String(userId)
+    const storeState = followStore.getUserFollowState(key)
     if (!storeState.hasState || storeState.followed !== isFollowing) {
-      followStore.initUserFollowState(userId, isFollowing)
+      followStore.initUserFollowState(key, isFollowing)
     }
   }, [userId, isFollowing, followStore])
 
