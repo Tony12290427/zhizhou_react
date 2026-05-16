@@ -3,6 +3,9 @@ import { immer } from 'zustand/middleware/immer'
 import { userApi } from '@/lib/api/user'
 import type { FollowButtonType } from '@/types/common'
 
+// Prevent concurrent toggle calls for the same userId (store-level lock)
+const inFlight = new Set<string>()
+
 interface UserFollowState {
   followed: boolean
   isMutual: boolean
@@ -198,12 +201,18 @@ export const useFollowStore = create<FollowState>()(
     },
 
     toggleUserFollow: async (userId) => {
-      const currentState = get().getUserFollowState(userId)
-
-      if (currentState.followed) {
-        return get().unfollowUser(userId)
-      } else {
-        return get().followUser(userId)
+      const key = String(userId)
+      if (inFlight.has(key)) return { success: false, error: '操作进行中' }
+      inFlight.add(key)
+      try {
+        const currentState = get().getUserFollowState(userId)
+        if (currentState.followed) {
+          return await get().unfollowUser(userId)
+        } else {
+          return await get().followUser(userId)
+        }
+      } finally {
+        inFlight.delete(key)
       }
     },
 
