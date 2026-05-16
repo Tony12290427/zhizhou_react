@@ -4,9 +4,9 @@
 
 AI 驱动的知识获取与分享社区。前端基于 React 19 + TypeScript 构建，提供内容发布、社交互动、AI 搜索等功能。
 
-🔗 **后端仓库**: [arknow_be](https://github.com/Tony12290427/arknow_be)
+🔗 **后端仓库**: [arkknow_be](https://github.com/Tony12290427/arkknow_be)
 
-📐 **架构设计**: 后端 [ARCHITECTURE.md](https://github.com/Tony12290427/arknow_be/blob/main/ARCHITECTURE.md) — 搜索管线、高并发优化、系统架构
+📐 **架构设计**: 后端 [ARCHITECTURE.md](https://github.com/Tony12290427/arkknow_be/blob/main/ARCHITECTURE.md) — 搜索管线、高并发优化、系统架构
 
 ## 截图预览
 
