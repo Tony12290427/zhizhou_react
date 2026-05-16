@@ -8,6 +8,20 @@ AI 驱动的知识获取与分享社区。前端基于 React 19 + TypeScript 构
 
 📐 **架构设计**: 后端 [ARCHITECTURE.md](https://github.com/Tony12290427/arknow_be/blob/main/ARCHITECTURE.md) — 搜索管线、高并发优化、系统架构
 
+## 截图预览
+
+| 主页 Feed | Explore 发现 | AI 搜索 |
+|-----------|-------------|---------|
+| ![主页](docs/screenshots/01-feed.png) | ![Explore](docs/screenshots/07-explore.png) | ![AI搜索](docs/screenshots/02-ai-search.png) |
+
+| 帖子详情 | 个人主页 | 发布页 |
+|---------|---------|--------|
+| ![帖子详情](docs/screenshots/08-post-detail.png) | ![个人主页](docs/screenshots/03-user-profile.png) | ![发布](docs/screenshots/04-publish.png) |
+
+| 通知 | 暗黑模式 | 管理后台 |
+|------|---------|---------|
+| ![通知](docs/screenshots/05-notification.png) | ![暗黑模式](docs/screenshots/06-dark-mode.png) | ![管理后台](docs/screenshots/09-admin-login.png) |
+
 ## 技术栈
 
 | 类别 | 技术 | 版本 | 用途 |
