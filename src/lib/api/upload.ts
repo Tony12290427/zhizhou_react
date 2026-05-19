@@ -1,4 +1,4 @@
-import request from '@/lib/request'
+import { presignUpload } from './index'
 import { apiConfig } from '@/config/api'
 
 /**
@@ -75,7 +75,7 @@ interface BatchUploadOptions {
   }) => void
 }
 
-export async function uploadImage(file: File, options: UploadOptions = {}) {
+export async function uploadImage(file: File, _options: UploadOptions = {}) {
   try {
     if (!file) throw new Error('请选择要上传的文件')
     if (file instanceof File && !file.type.startsWith('image/')) throw new Error('请选择图片文件')
@@ -85,22 +85,11 @@ export async function uploadImage(file: File, options: UploadOptions = {}) {
     // 压缩图片
     const compressedFile = await compressImage(file)
 
-    const formData = new FormData()
-    const filename = options.filename || (compressedFile instanceof File ? compressedFile.name : 'image.png')
-    formData.append('file', compressedFile, filename)
-
-    // 使用request实例上传
-    const result: any = await request.post('/upload/single', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    })
-
-    if (!result.success) throw new Error(result.message || '上传失败')
+    const result = await presignUpload(compressedFile, 'posts')
 
     return {
       success: true,
-      data: { url: result.data.url, originalName: filename, size: file.size },
+      data: { url: result.url, originalName: result.originalName, size: result.size },
       message: '上传成功',
     }
   } catch (error: any) {
@@ -182,34 +171,17 @@ export async function uploadImages(files: File[] | FileList, options: BatchUploa
 export async function uploadCroppedImage(blob: Blob, options: UploadOptions = {}) {
   try {
     if (!blob) throw new Error('请选择要上传的文件')
-
-    const formData = new FormData()
     const filename = options.filename || 'avatar.png'
-    formData.append('file', blob, filename)
+    const file = new File([blob], filename, { type: blob.type || 'image/png' })
+    const result = await presignUpload(file, 'avatars', 'avatar')
 
-    // 使用request实例上传
-    const result: any = await request.post('/upload/single', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    })
-
-    if (result.success) {
-      return {
-        success: true,
-        data: { url: result.data.url, originalName: filename, size: blob.size },
-        message: '上传成功',
-      }
-    } else {
-      throw new Error(result.message || '上传失败')
+    return {
+      success: true,
+      data: { url: result.url, originalName: filename, size: blob.size },
+      message: '上传成功',
     }
   } catch (error: any) {
-    console.error('头像上传失败:', error)
-    return {
-      success: false,
-      data: null,
-      message: error.message || '上传失败，请重试',
-    }
+    return { success: false, data: null, message: error.message || '上传失败，请重试' }
   }
 }
 

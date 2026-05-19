@@ -15,31 +15,69 @@ function getAdminRefreshToken(): string | null {
   return localStorage.getItem('adminRefreshToken')
 }
 
+export interface PresignUploadResult {
+  url: string
+  objectKey: string
+  originalName: string
+  size: number
+}
+
 /**
  * Upload a File via zhizhou_be OSS presigned URL.
- * 1. POST /storage/presign  →  { url, publicUrl }
+ * 1. POST /storage/presign  →  { putUrl, publicUrl, headers }
  * 2. PUT file to presigned url
  * 3. Returns the final public URL
  */
-async function presignUpload(file: File): Promise<{ url: string; originalName: string; size: number }> {
+async function presignUpload(
+  file: File,
+  scene: string = 'posts',
+  postId: string = 'draft'
+): Promise<PresignUploadResult> {
+  let contentType = file.type
+  // Browser often returns empty file.type for video
+  if (!contentType) {
+    const ext = file.name.split('.').pop()?.toLowerCase()
+    if (ext === 'mp4') contentType = 'video/mp4'
+    else if (ext === 'webm') contentType = 'video/webm'
+    else if (ext === 'mov') contentType = 'video/mov'
+    else if (ext === 'png') contentType = 'image/png'
+    else if (ext === 'gif') contentType = 'image/gif'
+    else if (ext === 'webp') contentType = 'image/webp'
+    else contentType = 'image/jpeg'
+  }
+
+  const ext = '.' + (file.name.split('.').pop() || 'png')
+
   const presign: any = await request.post('/storage/presign', {
-    filename: file.name,
-    contentType: file.type,
+    scene,
+    postId,
+    contentType,
+    ext,
+    size: file.size,
   })
 
-  const uploadUrl: string = presign.url || presign.uploadUrl
+  const uploadUrl: string = presign.putUrl || presign.url || presign.uploadUrl
   if (!uploadUrl) {
     throw new Error('No presigned upload URL returned from /storage/presign')
   }
 
-  await fetch(uploadUrl, {
+  const headers: Record<string, string> = presign.headers || {}
+  if (!headers['Content-Type']) {
+    headers['Content-Type'] = contentType
+  }
+
+  const resp = await fetch(uploadUrl, {
     method: 'PUT',
     body: file,
-    headers: { 'Content-Type': file.type },
+    headers,
   })
 
+  if (!resp.ok) {
+    throw new Error(`Upload failed: HTTP ${resp.status}`)
+  }
+
   const finalUrl = presign.publicUrl || presign.fileUrl || uploadUrl.split('?')[0] || ''
-  return { url: finalUrl, originalName: file.name, size: file.size }
+  return { url: finalUrl, objectKey: presign.objectKey || '', originalName: file.name, size: file.size }
 }
 
 /** Standard pagination: page/limit → page/size (knowposts) or offset/limit (relations/comments). */
@@ -824,3 +862,4 @@ export const categoryApi = {
 
 export { default as imageUploadApi } from './upload'
 export { default as videoUploadApi } from './video'
+export { presignUpload }
