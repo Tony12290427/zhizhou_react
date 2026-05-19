@@ -257,6 +257,26 @@ npm run dev
 
 访问：
 - 前端: http://localhost:5173
+
+## 安全与 Commit 规范
+
+**绝对红线 — 禁止提交到 GitHub：**
+
+| 类别 | 示例 |
+|------|------|
+| API 密钥 | `sk-proj-...`、`sk-...`、OpenAI/DeepSeek key |
+| 服务器 IP | 公网 IP 地址（文档用 `<server-ip>` 占位） |
+| 真实域名 | `arknow.online`（文档用 `<your-domain>` 占位） |
+| SSH 密钥 | `*.pem` 私钥文件 |
+| AccessKey | 阿里云 `LTAI...` 及其 Secret |
+
+**Commit message 禁用措辞**：`remove key`、`fix leak`、`清理密钥`、`修复泄露`
+
+**提交前自查清单**：
+- [ ] `git diff --cached` 中无 `sk-proj-`、`sk-` 开头的字符串
+- [ ] 无 IP 地址 `8.x.x.x` 格式
+- [ ] 无 `.pem` 私钥文件
+- [ ] `.env` 已被 `.gitignore` 排除
 - Admin 后台: http://localhost:5173/admin/login
 - 管理员账号: 13800000000（验证码登录）
 - API 文档: http://localhost:8090/api/v1/admin/api-docs
