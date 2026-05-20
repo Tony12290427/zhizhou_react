@@ -46,7 +46,7 @@ export function AuthModal() {
   const [isClosing, setIsClosing] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
-  const [emailEnabled, setEmailEnabled] = useState(false)
+  const [emailEnabled] = useState(false)
   const [showResetPassword, setShowResetPassword] = useState(false)
 
   // Tab state
