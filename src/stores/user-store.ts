@@ -8,15 +8,18 @@ function normalizeUserInfo(raw: any): UserInfo {
 }
 
 interface LoginCredentials {
-  account: string
+  account?: string
   password: string
+  username?: string
 }
 
 interface RegisterData {
-  account: string
+  account?: string
+  username?: string
   password: string
   nickname?: string
   code?: string
+  confirmPassword?: string
 }
 
 interface UserState {
@@ -41,6 +44,7 @@ interface UserState {
   updateUserInfo: (newUserInfo: Partial<UserInfo>) => void
   updateProfile: (data: Record<string, unknown>) => Promise<{ success: boolean; data?: unknown; message?: string }>
   sendCode: (target: string) => Promise<{ success: boolean; message: string }>
+  channelLogin: (params: { type: 'PHONE' | 'EMAIL'; target: string; code: string; username?: string; password?: string }) => Promise<{ success: boolean; message: string }>
 }
 
 export const useUserStore = create<UserState>((set, get) => ({
@@ -65,11 +69,21 @@ export const useUserStore = create<UserState>((set, get) => ({
     try {
       set({ isLoading: true })
       // zhizhou_be POST /auth/login expects { identifierType, identifier, password }
-      // Map frontend "account" (phone number) to backend format
-      const isEmail = credentials.account.includes('@')
+      let identifierType: string
+      let identifier: string
+      if (credentials.username) {
+        identifierType = 'USERNAME'
+        identifier = credentials.username
+      } else if (credentials.account) {
+        const isEmail = credentials.account.includes('@')
+        identifierType = isEmail ? 'EMAIL' : 'PHONE'
+        identifier = credentials.account
+      } else {
+        return { success: false, message: '请输入用户名或手机号' }
+      }
       const data: any = await request.post('/auth/login', {
-        identifierType: isEmail ? 'EMAIL' : 'PHONE',
-        identifier: credentials.account,
+        identifierType,
+        identifier,
         password: credentials.password,
       })
 
@@ -229,6 +243,47 @@ export const useUserStore = create<UserState>((set, get) => ({
       return { success: true, message: '验证码已发送' }
     } catch (error: any) {
       return { success: false, message: error?.message || '发送失败' }
+    }
+  },
+
+  channelLogin: async (params) => {
+    try {
+      set({ isLoading: true })
+      const body: Record<string, string> = {
+        type: params.type,
+        target: params.target,
+        code: params.code,
+      }
+      if (params.username) body.username = params.username
+      if (params.password) body.password = params.password
+
+      const data: any = await request.post('/auth/login/channel', body)
+
+      const accessToken = data?.token?.accessToken || data?.accessToken
+      const refreshToken = data?.token?.refreshToken || data?.refreshToken
+
+      if (accessToken) {
+        set({ token: accessToken, refreshToken })
+        localStorage.setItem('token', accessToken)
+        if (refreshToken) localStorage.setItem('refreshToken', refreshToken)
+
+        try {
+          const user: any = await request.get('/auth/me')
+          if (user) {
+            const norm = normalizeUserInfo(user)
+            set({ userInfo: norm })
+            localStorage.setItem('userInfo', JSON.stringify(norm))
+          }
+        } catch { /* ignore */ }
+
+        return { success: true, message: '登录成功' }
+      }
+      return { success: false, message: '登录失败' }
+    } catch (error: any) {
+      console.error('Channel login failed:', error)
+      return { success: false, message: error?.message || '登录失败' }
+    } finally {
+      set({ isLoading: false })
     }
   },
 }))

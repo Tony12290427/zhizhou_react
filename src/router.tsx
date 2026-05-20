@@ -12,6 +12,7 @@ import PostManagement from '@/pages/post-management/PostManagement'
 import DraftBox from '@/pages/draft-box/DraftBox'
 import Publish from '@/pages/Publish'
 import NotFound from '@/pages/NotFound'
+import OAuthCallback from '@/pages/OAuthCallback'
 
 import AdminLogin from '@/pages/admin/AdminLogin'
 import AdminLayout from '@/pages/admin/AdminLayout'
@@ -67,6 +68,10 @@ export const router = createBrowserRouter([
       { path: 'draft-box', element: <DraftBox /> },
       { path: '*', element: <NotFound /> },
     ],
+  },
+  {
+    path: '/oauth/callback',
+    element: <OAuthCallback />,
   },
   {
     path: '/admin/login',

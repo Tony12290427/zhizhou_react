@@ -1,12 +1,41 @@
 import React, { useEffect, useCallback, useState, useRef } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
-import { X, AlertTriangle } from 'lucide-react'
+import * as Tabs from '@radix-ui/react-tabs'
+import { X, AlertTriangle, Phone, Mail } from 'lucide-react'
 import { useScrollLock } from '@/hooks/use-scroll-lock'
 import { useAuthStore } from '@/stores/auth-store'
 import { useUserStore } from '@/stores/user-store'
-import { authApi } from '@/lib/api'
 import { toast } from '@/utils/toastManager'
 import ResetPasswordModal from './ResetPasswordModal'
+
+type TabValue = 'login' | 'quick-login' | 'register'
+
+function useCountdown() {
+  const [countdown, setCountdown] = useState(0)
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
+  const startCountdown = useCallback((seconds = 60) => {
+    setCountdown(seconds)
+    if (timerRef.current) clearInterval(timerRef.current)
+    timerRef.current = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          if (timerRef.current) clearInterval(timerRef.current)
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current)
+    }
+  }, [])
+
+  return { countdown, startCountdown }
+}
 
 export function AuthModal() {
   const { showAuthModal, initialMode, closeAuthModal } = useAuthStore()
@@ -15,35 +44,57 @@ export function AuthModal() {
 
   const [isAnimating, setIsAnimating] = useState(false)
   const [isClosing, setIsClosing] = useState(false)
-  const [isLoginMode, setIsLoginMode] = useState(initialMode === 'login')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
-  const [showErrors, setShowErrors] = useState(false)
   const [emailEnabled, setEmailEnabled] = useState(false)
   const [showResetPassword, setShowResetPassword] = useState(false)
 
-  // Form fields
-  const [userId, setUserId] = useState('')
-  const [nickname, setNickname] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [email, setEmail] = useState('')
-  const [emailCode, setEmailCode] = useState('')
+  // Tab state
+  const getInitialTab = useCallback(
+    (mode: typeof initialMode): TabValue => {
+      if (mode === 'register') return 'register'
+      if (mode === 'quick-login') return 'quick-login'
+      return 'login'
+    },
+    []
+  )
+  const [activeTab, setActiveTab] = useState<TabValue>(() => getInitialTab(initialMode))
 
-  // Errors
-  const [errors, setErrors] = useState({
-    user_id: '',
-    nickname: '',
-    password: '',
-    confirmPassword: '',
-    email: '',
-    emailCode: '',
-  })
+  // --- Login tab ---
+  const [loginUsername, setLoginUsername] = useState('')
+  const [loginPassword, setLoginPassword] = useState('')
 
-  // Update isLoginMode when initialMode changes
+  // --- Register tab ---
+  const [regUsername, setRegUsername] = useState('')
+  const [regPassword, setRegPassword] = useState('')
+  const [regConfirmPassword, setRegConfirmPassword] = useState('')
+
+  // --- Quick login tab ---
+  const [quickPhone, setQuickPhone] = useState('')
+  const [quickPhoneCode, setQuickPhoneCode] = useState('')
+  const [quickEmail, setQuickEmail] = useState('')
+  const [quickEmailCode, setQuickEmailCode] = useState('')
+  const [phoneExpanded, setPhoneExpanded] = useState(false)
+  const [emailExpanded, setEmailExpanded] = useState(false)
+  const phoneCountdown = useCountdown()
+  const emailCountdown = useCountdown()
+
+  // Channel-bind state (when channel login returns CHANNEL_NOT_BOUND)
+  const [channelBindInfo, setChannelBindInfo] = useState<{
+    type: 'PHONE' | 'EMAIL'
+    target: string
+    code: string
+  } | null>(null)
+  const [bindUsername, setBindUsername] = useState('')
+  const [bindPassword, setBindPassword] = useState('')
+
+  // Update activeTab when initialMode changes
   useEffect(() => {
-    setIsLoginMode(initialMode === 'login')
-  }, [initialMode])
+    setActiveTab(getInitialTab(initialMode))
+    setChannelBindInfo(null)
+    setBindUsername('')
+    setBindPassword('')
+  }, [initialMode, getInitialTab])
 
   // Scroll lock and animation
   useEffect(() => {
@@ -54,274 +105,263 @@ export function AuthModal() {
           setIsAnimating(true)
         })
       })
-      // Fetch email config
-      fetchEmailConfig()
     } else {
       setIsAnimating(false)
     }
   }, [showAuthModal, lock])
 
-  const fetchEmailConfig = async () => {
-    try {
-      const response: any = await authApi.getEmailConfig()
-      if (response.code === 200) {
-        setEmailEnabled(response.data.emailEnabled)
-      }
-    } catch (error) {
-      console.error('获取邮件配置失败:', error)
-    }
-  }
-
-  const clearError = useCallback((field: string) => {
-    setErrors((prev) => ({ ...prev, [field]: '' }))
-    setErrorMessage('')
-    setShowErrors(false)
-  }, [])
-
   const resetForm = useCallback(() => {
-    setUserId('')
-    setNickname('')
-    setPassword('')
-    setConfirmPassword('')
-    setEmail('')
-    setEmailCode('')
-    setErrors({
-      user_id: '',
-      nickname: '',
-      password: '',
-      confirmPassword: '',
-      email: '',
-      emailCode: '',
-    })
+    setLoginUsername('')
+    setLoginPassword('')
+    setRegUsername('')
+    setRegPassword('')
+    setRegConfirmPassword('')
+    setQuickPhone('')
+    setQuickPhoneCode('')
+    setQuickEmail('')
+    setQuickEmailCode('')
+    setPhoneExpanded(false)
+    setEmailExpanded(false)
+    setChannelBindInfo(null)
+    setBindUsername('')
+    setBindPassword('')
     setErrorMessage('')
-    setShowErrors(false)
   }, [])
 
-  const toggleMode = useCallback(() => {
-    setIsLoginMode(!isLoginMode)
-    resetForm()
-  }, [isLoginMode, resetForm])
+  const switchToTab = useCallback(
+    (tab: TabValue) => {
+      setActiveTab(tab)
+      resetForm()
+    },
+    [resetForm]
+  )
 
-  // Validation
-  const validateUserId = useCallback(async () => {
-    setErrors((prev) => ({ ...prev, user_id: '' }))
-
-    if (!userId.trim()) {
-      setErrors((prev) => ({ ...prev, user_id: '请输入知舟号' }))
-      return
-    }
-
-    if (userId.length < 3 || userId.length > 15) {
-      setErrors((prev) => ({ ...prev, user_id: '知舟号长度必须在3-15位之间' }))
-      return
-    }
-
-    if (!/^[a-zA-Z0-9_]+$/.test(userId)) {
-      setErrors((prev) => ({ ...prev, user_id: '知舟号只能包含字母、数字和下划线' }))
-      return
-    }
-
-    // Uniqueness is checked server-side during registration
-    // No client-side check needed (backend /auth/register validates phone/email uniqueness)
-
-    setErrors((prev) => ({ ...prev, user_id: '' }))
-  }, [userId, isLoginMode])
-
-  const validatePassword = useCallback(() => {
-    if (!password.trim()) {
-      setErrors((prev) => ({ ...prev, password: '请输入密码' }))
-    } else if (!isLoginMode && password.length < 6) {
-      setErrors((prev) => ({ ...prev, password: '密码至少需要6位' }))
-    } else {
-      setErrors((prev) => ({ ...prev, password: '' }))
-    }
-  }, [password, isLoginMode])
-
-  const validateNickname = useCallback(() => {
-    if (!isLoginMode && !nickname.trim()) {
-      setErrors((prev) => ({ ...prev, nickname: '请输入昵称' }))
-    } else {
-      setErrors((prev) => ({ ...prev, nickname: '' }))
-    }
-  }, [nickname, isLoginMode])
-
-  const validateConfirmPassword = useCallback(() => {
-    if (!isLoginMode) {
-      if (!confirmPassword.trim()) {
-        setErrors((prev) => ({ ...prev, confirmPassword: '请确认密码' }))
-      } else if (password !== confirmPassword) {
-        setErrors((prev) => ({ ...prev, confirmPassword: '两次输入的密码不一致' }))
-      } else {
-        setErrors((prev) => ({ ...prev, confirmPassword: '' }))
-      }
-    }
-  }, [confirmPassword, password, isLoginMode])
-
-  const validateEmail = useCallback(() => {
-    if (!emailEnabled || isLoginMode) return
-    if (!email.trim()) {
-      setErrors((prev) => ({ ...prev, email: '请输入邮箱地址' }))
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setErrors((prev) => ({ ...prev, email: '请输入有效的邮箱地址' }))
-    } else {
-      setErrors((prev) => ({ ...prev, email: '' }))
-    }
-  }, [email, emailEnabled, isLoginMode])
-
-  const validateEmailCode = useCallback(() => {
-    if (!emailEnabled || isLoginMode) return
-    if (!emailCode.trim()) {
-      setErrors((prev) => ({ ...prev, emailCode: '请输入邮箱验证码' }))
-    } else if (emailCode.length !== 6) {
-      setErrors((prev) => ({ ...prev, emailCode: '邮箱验证码长度为6位' }))
-    } else {
-      setErrors((prev) => ({ ...prev, emailCode: '' }))
-    }
-  }, [emailCode, emailEnabled, isLoginMode])
-
-  const sendEmailCode = useCallback(async () => {
-    validateEmail()
-    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setShowErrors(true)
-      return
-    }
-
-    try {
-      const response = await userStore.sendEmailCode(email)
-      if (response.success) {
-        toast.success(response.message)
-      } else {
-        setErrorMessage(response.message || '发送验证码失败')
-      }
-    } catch (error) {
-      console.error('发送验证码失败:', error)
-      setErrorMessage('网络错误，请稍后重试')
-    }
-  }, [email, validateEmail, userStore])
-
-  const handleSubmit = useCallback(
+  // --- Login submit ---
+  const handleLoginSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault()
       setErrorMessage('')
-      setShowErrors(true)
 
-      if (isLoginMode) {
-        // Login mode
-        if (!userId.trim() && !password.trim()) return
+      if (!loginUsername.trim()) {
+        setErrorMessage('请输入用户名')
+        return
+      }
+      if (!loginPassword.trim()) {
+        setErrorMessage('请输入密码')
+        return
+      }
 
-        if (!userId.trim()) {
-          setErrorMessage('请输入知舟号')
-          return
+      setIsSubmitting(true)
+      try {
+        const result = await userStore.login({
+          username: loginUsername,
+          password: loginPassword,
+        })
+
+        if (result.success) {
+          toast.success('登录成功！')
+          setTimeout(() => {
+            handleClose()
+            window.location.reload()
+          }, 1000)
+        } else {
+          setErrorMessage(result.message || '登录失败')
         }
-        if (!password.trim()) {
-          setErrorMessage('请输入密码')
-          return
-        }
-
-        setIsSubmitting(true)
-        try {
-          const result = await userStore.login({
-            account: userId,
-            password,
-          })
-
-          if (result.success) {
-            toast.success('登录成功！')
-            setTimeout(() => {
-              handleClose()
-              window.location.reload()
-            }, 1000)
-          } else {
-            setErrorMessage(result.message || '登录失败')
-          }
-        } catch (error: any) {
-          console.error('登录失败:', error)
-          setErrorMessage('网络错误，请稍后重试')
-        } finally {
-          setIsSubmitting(false)
-        }
-      } else {
-        // Register mode: validate all fields
-        await validateUserId()
-        validatePassword()
-        validateNickname()
-        validateConfirmPassword()
-        if (emailEnabled) {
-          validateEmail()
-          validateEmailCode()
-        }
-
-        // Check if any errors
-        const hasErrors =
-          !userId.trim() ||
-          (userId.length < 3) ||
-          !/^[a-zA-Z0-9_]+$/.test(userId) ||
-          !nickname.trim() ||
-          !password.trim() ||
-          (password.length < 6) ||
-          !confirmPassword.trim() ||
-          password !== confirmPassword ||
-          (emailEnabled && (!email.trim() || !emailCode.trim()))
-
-        if (hasErrors) return
-
-        setIsSubmitting(true)
-        try {
-          const registerData: any = {
-            account: userId,
-            nickname,
-            password,
-          }
-
-          if (emailEnabled) {
-            registerData.email = email
-            registerData.emailCode = emailCode
-          }
-
-          const result = await userStore.register(registerData)
-
-          if (result.success) {
-            toast.success('注册成功！')
-            setTimeout(() => {
-              handleClose()
-              window.location.reload()
-            }, 1000)
-          } else {
-            const msg = result.message || '注册失败'
-            if (msg.includes('邮箱验证码')) {
-              setErrors((prev) => ({ ...prev, emailCode: msg }))
-              setShowErrors(true)
-            } else if (msg.includes('用户ID已存在')) {
-              setErrors((prev) => ({ ...prev, user_id: msg }))
-            } else {
-              setErrorMessage(msg)
-            }
-          }
-        } catch (error: any) {
-          console.error('注册失败:', error)
-          setErrorMessage('网络错误，请稍后重试')
-        } finally {
-          setIsSubmitting(false)
-        }
+      } catch (error: any) {
+        console.error('登录失败:', error)
+        setErrorMessage('网络错误，请稍后重试')
+      } finally {
+        setIsSubmitting(false)
       }
     },
-    [
-      isLoginMode,
-      userId,
-      password,
-      nickname,
-      confirmPassword,
-      email,
-      emailCode,
-      emailEnabled,
-      userStore,
-      validateUserId,
-      validatePassword,
-      validateNickname,
-      validateConfirmPassword,
-      validateEmail,
-      validateEmailCode,
-    ]
+    [loginUsername, loginPassword, userStore]
+  )
+
+  // --- Register submit ---
+  const handleRegisterSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault()
+      setErrorMessage('')
+
+      if (!regUsername.trim()) {
+        setErrorMessage('请输入用户名')
+        return
+      }
+      if (!regPassword.trim()) {
+        setErrorMessage('请输入密码')
+        return
+      }
+      if (regPassword.length < 6) {
+        setErrorMessage('密码至少需要6位')
+        return
+      }
+      if (!regConfirmPassword.trim()) {
+        setErrorMessage('请确认密码')
+        return
+      }
+      if (regPassword !== regConfirmPassword) {
+        setErrorMessage('两次输入的密码不一致')
+        return
+      }
+
+      setIsSubmitting(true)
+      try {
+        const result = await userStore.register({
+          username: regUsername,
+          password: regPassword,
+          confirmPassword: regConfirmPassword,
+        })
+
+        if (result.success) {
+          toast.success('注册成功！')
+          setTimeout(() => {
+            handleClose()
+            window.location.reload()
+          }, 1000)
+        } else {
+          setErrorMessage(result.message || '注册失败')
+        }
+      } catch (error: any) {
+        console.error('注册失败:', error)
+        setErrorMessage('网络错误，请稍后重试')
+      } finally {
+        setIsSubmitting(false)
+      }
+    },
+    [regUsername, regPassword, regConfirmPassword, userStore]
+  )
+
+  // --- Send code (phone) ---
+  const sendPhoneCode = useCallback(async () => {
+    if (!quickPhone.trim()) {
+      setErrorMessage('请输入手机号码')
+      return
+    }
+    try {
+      const result = await userStore.sendCode(quickPhone)
+      if (result.success) {
+        toast.success('验证码已发送')
+        phoneCountdown.startCountdown(60)
+      } else {
+        setErrorMessage(result.message || '发送验证码失败')
+      }
+    } catch {
+      setErrorMessage('网络错误，请稍后重试')
+    }
+  }, [quickPhone, userStore, phoneCountdown])
+
+  // --- Send code (email) ---
+  const sendEmailCode = useCallback(async () => {
+    if (!quickEmail.trim()) {
+      setErrorMessage('请输入邮箱地址')
+      return
+    }
+    try {
+      const result = await userStore.sendCode(quickEmail)
+      if (result.success) {
+        toast.success('验证码已发送')
+        emailCountdown.startCountdown(60)
+      } else {
+        setErrorMessage(result.message || '发送验证码失败')
+      }
+    } catch {
+      setErrorMessage('网络错误，请稍后重试')
+    }
+  }, [quickEmail, userStore, emailCountdown])
+
+  // --- Channel login ---
+  const doChannelLogin = useCallback(
+    async (type: 'PHONE' | 'EMAIL', target: string, code: string, username?: string, password?: string) => {
+      setErrorMessage('')
+      setIsSubmitting(true)
+      try {
+        const result = await userStore.channelLogin({ type, target, code, username, password })
+        if (result.success) {
+          toast.success('登录成功！')
+          setTimeout(() => {
+            handleClose()
+            window.location.reload()
+          }, 1000)
+        } else {
+          const msg = result.message || ''
+          if (msg.includes('CHANNEL_NOT_BOUND') || msg.includes('未绑定') || msg.includes('绑定')) {
+            setChannelBindInfo({ type, target, code })
+            setErrorMessage('该方式尚未绑定账号，请设置用户名和密码完成绑定')
+          } else {
+            setErrorMessage(msg || '登录失败')
+          }
+        }
+      } catch (error: any) {
+        console.error('Channel login failed:', error)
+        setErrorMessage(error?.message || '登录失败，请稍后重试')
+      } finally {
+        setIsSubmitting(false)
+      }
+    },
+    [userStore]
+  )
+
+  // --- Channel bind submit (when CHANNEL_NOT_BOUND) ---
+  const handleChannelBindSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault()
+      if (!channelBindInfo) return
+      if (!bindUsername.trim()) {
+        setErrorMessage('请设置用户名')
+        return
+      }
+      if (!bindPassword.trim() || bindPassword.length < 6) {
+        setErrorMessage('请设置密码（至少6位）')
+        return
+      }
+
+      setIsSubmitting(true)
+      try {
+        const result = await userStore.channelLogin({
+          type: channelBindInfo.type,
+          target: channelBindInfo.target,
+          code: channelBindInfo.code,
+          username: bindUsername,
+          password: bindPassword,
+        })
+        if (result.success) {
+          toast.success('绑定并登录成功！')
+          setTimeout(() => {
+            handleClose()
+            window.location.reload()
+          }, 1000)
+        } else {
+          setErrorMessage(result.message || '绑定失败')
+        }
+      } catch (error: any) {
+        setErrorMessage(error?.message || '绑定失败')
+      } finally {
+        setIsSubmitting(false)
+      }
+    },
+    [channelBindInfo, bindUsername, bindPassword, userStore]
+  )
+
+  // --- Phone code login ---
+  const handlePhoneCodeLogin = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault()
+      if (!quickPhone.trim()) { setErrorMessage('请输入手机号码'); return }
+      if (!quickPhoneCode.trim()) { setErrorMessage('请输入验证码'); return }
+      await doChannelLogin('PHONE', quickPhone, quickPhoneCode)
+    },
+    [quickPhone, quickPhoneCode, doChannelLogin]
+  )
+
+  // --- Email code login ---
+  const handleEmailCodeLogin = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault()
+      if (!quickEmail.trim()) { setErrorMessage('请输入邮箱地址'); return }
+      if (!quickEmailCode.trim()) { setErrorMessage('请输入验证码'); return }
+      await doChannelLogin('EMAIL', quickEmail, quickEmailCode)
+    },
+    [quickEmail, quickEmailCode, doChannelLogin]
   )
 
   const handleClose = useCallback(() => {
@@ -331,7 +371,7 @@ export function AuthModal() {
       setIsAnimating(false)
       unlock()
       closeAuthModal()
-    }, 200) // match CSS transition duration
+    }, 200)
   }, [unlock, closeAuthModal])
 
   const handleOpenChange = useCallback(
@@ -353,7 +393,6 @@ export function AuthModal() {
   const handleBackToLogin = useCallback(() => {
     setShowResetPassword(false)
     closeAuthModal()
-    // Re-open auth modal after a brief delay
     setTimeout(() => {
       useAuthStore.getState().openLoginModal()
     }, 300)
@@ -371,7 +410,7 @@ export function AuthModal() {
             onPointerDownOutside={(e) => e.preventDefault()}
           >
             <Dialog.Title className="sr-only">
-              {isLoginMode ? '登录知舟' : '注册知舟'}
+              {activeTab === 'register' ? '注册知舟' : '登录知舟'}
             </Dialog.Title>
             <Dialog.Close asChild>
               <button className="close-btn">
@@ -382,209 +421,408 @@ export function AuthModal() {
             <div className="auth-content">
               <div className="auth-header">
                 <h2 className="auth-title">
-                  {isLoginMode ? '登录知舟' : '注册知舟'}
+                  {activeTab === 'register' ? '注册知舟' : '登录知舟'}
                 </h2>
                 <p className="auth-subtitle">
-                  {isLoginMode ? '欢迎回来！' : '加入我们，开始分享美好生活'}
+                  {activeTab === 'register'
+                    ? '加入我们，开始分享美好生活'
+                    : '欢迎回来！'}
                 </p>
               </div>
 
-              <form onSubmit={handleSubmit} className="auth-form" noValidate autoComplete="off">
-                {/* User ID */}
-                <div className="form-group">
-                  <label className="form-label">知舟号</label>
-                  <input
-                    type="text"
-                    className={`form-input ${showErrors && errors.user_id ? 'error' : ''}`}
-                    placeholder={
-                      isLoginMode
-                        ? '请输入知舟号'
-                        : '请输入知舟号（3-15位字母数字下划线）'
-                    }
-                    maxLength={15}
-                    autoComplete="off"
-                    value={userId}
-                    onChange={(e) => {
-                      setUserId(e.target.value)
-                      clearError('user_id')
-                    }}
-                  />
-                  {showErrors && errors.user_id && (
-                    <span className="error-message">{errors.user_id}</span>
-                  )}
-                </div>
+              <Tabs.Root
+                value={activeTab}
+                onValueChange={(v) => switchToTab(v as TabValue)}
+                className="auth-tabs-root"
+              >
+                <Tabs.List className="auth-tabs-list" aria-label="登录方式">
+                  <Tabs.Trigger className="auth-tab-trigger" value="login">
+                    账号登录
+                  </Tabs.Trigger>
+                  <Tabs.Trigger className="auth-tab-trigger" value="quick-login">
+                    快捷登录
+                  </Tabs.Trigger>
+                  <Tabs.Trigger className="auth-tab-trigger" value="register">
+                    注册
+                  </Tabs.Trigger>
+                </Tabs.List>
 
-                {/* Nickname (register only) */}
-                {!isLoginMode && (
-                  <div className="form-group">
-                    <label className="form-label">昵称</label>
-                    <input
-                      type="text"
-                      className={`form-input ${showErrors && errors.nickname ? 'error' : ''}`}
-                      placeholder="请输入昵称（少于10位）"
-                      maxLength={10}
-                      autoComplete="off"
-                      value={nickname}
-                      onChange={(e) => {
-                        setNickname(e.target.value)
-                        clearError('nickname')
-                      }}
-                    />
-                    {showErrors && errors.nickname && (
-                      <span className="error-message">{errors.nickname}</span>
-                    )}
-                  </div>
-                )}
-
-                {/* Password */}
-                <div className="form-group">
-                  <label className="form-label">密码</label>
-                  <input
-                    type="password"
-                    className={`form-input ${showErrors && errors.password ? 'error' : ''}`}
-                    placeholder={isLoginMode ? '请输入密码' : '请设置密码（6-20位）'}
-                    maxLength={20}
-                    autoComplete="new-password"
-                    value={password}
-                    onChange={(e) => {
-                      setPassword(e.target.value)
-                      clearError('password')
-                    }}
-                  />
-                  {showErrors && errors.password && (
-                    <span className="error-message">{errors.password}</span>
-                  )}
-                </div>
-
-                {/* Confirm Password (register only) */}
-                {!isLoginMode && (
-                  <div className="form-group">
-                    <label className="form-label">确认密码</label>
-                    <input
-                      type="password"
-                      className={`form-input ${showErrors && errors.confirmPassword ? 'error' : ''}`}
-                      placeholder="请再次输入密码"
-                      maxLength={20}
-                      autoComplete="new-password"
-                      value={confirmPassword}
-                      onChange={(e) => {
-                        setConfirmPassword(e.target.value)
-                        clearError('confirmPassword')
-                      }}
-                    />
-                    {showErrors && errors.confirmPassword && (
-                      <span className="error-message">{errors.confirmPassword}</span>
-                    )}
-                  </div>
-                )}
-
-                {/* Email (register only, when enabled) */}
-                {!isLoginMode && emailEnabled && (
-                  <>
+                {/* ========== Tab 1: 账号密码登录 ========== */}
+                <Tabs.Content className="auth-tab-content" value="login">
+                  <form onSubmit={handleLoginSubmit} className="auth-form" noValidate autoComplete="off">
+                    {/* Username */}
                     <div className="form-group">
-                      <label className="form-label">邮箱</label>
+                      <label className="form-label">用户名</label>
                       <input
-                        type="email"
-                        className={`form-input ${showErrors && errors.email ? 'error' : ''}`}
-                        placeholder="请输入邮箱地址"
-                        maxLength={100}
+                        type="text"
+                        className="form-input"
+                        placeholder="请输入用户名"
+                        maxLength={15}
                         autoComplete="off"
-                        value={email}
+                        value={loginUsername}
                         onChange={(e) => {
-                          setEmail(e.target.value)
-                          clearError('email')
+                          setLoginUsername(e.target.value)
+                          setErrorMessage('')
                         }}
                       />
-                      {showErrors && errors.email && (
-                        <span className="error-message">{errors.email}</span>
-                      )}
                     </div>
 
+                    {/* Password */}
                     <div className="form-group">
-                      <label className="form-label">邮箱验证码</label>
-                      <div className="form-input-with-button">
+                      <label className="form-label">密码</label>
+                      <input
+                        type="password"
+                        className="form-input"
+                        placeholder="请输入密码"
+                        maxLength={20}
+                        autoComplete="current-password"
+                        value={loginPassword}
+                        onChange={(e) => {
+                          setLoginPassword(e.target.value)
+                          setErrorMessage('')
+                        }}
+                      />
+                    </div>
+
+                    {/* Error message */}
+                    {errorMessage && (
+                      <div className="error-tip">
+                        <AlertTriangle size={16} />
+                        {errorMessage}
+                      </div>
+                    )}
+
+                    {/* Submit */}
+                    <button type="submit" className="submit-btn" disabled={isSubmitting}>
+                      {isSubmitting && <span className="loading-spinner" />}
+                      {isSubmitting ? '登录中...' : '登录'}
+                    </button>
+                  </form>
+
+                  <div className="auth-switch">
+                    <span className="switch-text">没有账号？</span>
+                    <button type="button" className="switch-btn" onClick={() => switchToTab('register')}>
+                      注册
+                    </button>
+                  </div>
+
+                  <div className="auth-switch">
+                    <span className="switch-text">其他方式</span>
+                    <button type="button" className="switch-btn" onClick={() => switchToTab('quick-login')}>
+                      快捷登录
+                    </button>
+                  </div>
+
+                  {/* Forgot password */}
+                  {emailEnabled && (
+                    <div className="forgot-password">
+                      <button type="button" className="forgot-btn" onClick={openResetPassword}>
+                        忘记密码？
+                      </button>
+                    </div>
+                  )}
+                </Tabs.Content>
+
+                {/* ========== Tab 2: 快捷登录 ========== */}
+                <Tabs.Content className="auth-tab-content" value="quick-login">
+                  {errorMessage && (
+                    <div className="error-tip">
+                      <AlertTriangle size={16} />
+                      {errorMessage}
+                    </div>
+                  )}
+
+                  {/* Channel bind form */}
+                  {channelBindInfo ? (
+                    <form onSubmit={handleChannelBindSubmit} className="auth-form" noValidate autoComplete="off">
+                      <p className="bind-notice">
+                        {channelBindInfo.type === 'PHONE' ? '手机号' : '邮箱'}{' '}
+                        <strong>{channelBindInfo.target}</strong> 尚未绑定账号，请设置用户名和密码完成登录
+                      </p>
+                      <div className="form-group">
+                        <label className="form-label">设置用户名</label>
                         <input
                           type="text"
-                          className={`form-input ${showErrors && errors.emailCode ? 'error' : ''}`}
-                          placeholder="请输入邮箱验证码"
-                          maxLength={6}
-                          autoComplete="one-time-code"
-                          value={emailCode}
+                          className="form-input"
+                          placeholder="请输入用户名（3-15位字母数字下划线）"
+                          maxLength={15}
+                          autoComplete="off"
+                          value={bindUsername}
                           onChange={(e) => {
-                            setEmailCode(e.target.value)
-                            clearError('emailCode')
+                            setBindUsername(e.target.value)
+                            setErrorMessage('')
                           }}
                         />
-                        <button
-                          type="button"
-                          className="email-code-btn"
-                          disabled={
-                            userStore.isSendingEmailCode ||
-                            userStore.emailCodeCountdown > 0 ||
-                            !email ||
-                            !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-                          }
-                          onClick={sendEmailCode}
-                        >
-                          {userStore.emailCodeCountdown > 0
-                            ? `${userStore.emailCodeCountdown}秒后重发`
-                            : userStore.isSendingEmailCode
-                              ? '发送中...'
-                              : '获取验证码'}
-                        </button>
                       </div>
-                      {showErrors && errors.emailCode && (
-                        <span className="error-message">{errors.emailCode}</span>
+                      <div className="form-group">
+                        <label className="form-label">设置密码</label>
+                        <input
+                          type="password"
+                          className="form-input"
+                          placeholder="请设置密码（6-20位）"
+                          maxLength={20}
+                          autoComplete="new-password"
+                          value={bindPassword}
+                          onChange={(e) => {
+                            setBindPassword(e.target.value)
+                            setErrorMessage('')
+                          }}
+                        />
+                      </div>
+                      {errorMessage && (
+                        <div className="error-tip">
+                          <AlertTriangle size={16} />
+                          {errorMessage}
+                        </div>
                       )}
+                      <button type="submit" className="submit-btn" disabled={isSubmitting}>
+                        {isSubmitting && <span className="loading-spinner" />}
+                        {isSubmitting ? '绑定中...' : '绑定并登录'}
+                      </button>
+                      <button
+                        type="button"
+                        className="back-btn"
+                        onClick={() => setChannelBindInfo(null)}
+                      >
+                        返回
+                      </button>
+                    </form>
+                  ) : (
+                    <div className="quick-login-buttons">
+                      {/* Phone code login */}
+                      <button
+                        type="button"
+                        className="quick-login-btn"
+                        onClick={() => {
+                          setPhoneExpanded(!phoneExpanded)
+                          setEmailExpanded(false)
+                          setErrorMessage('')
+                        }}
+                      >
+                        <Phone size={18} />
+                        手机验证码登录
+                      </button>
+
+                      {phoneExpanded && (
+                        <form onSubmit={handlePhoneCodeLogin} className="quick-login-form" noValidate autoComplete="off">
+                          <div className="form-group">
+                            <label className="form-label">手机号码</label>
+                            <input
+                              type="tel"
+                              className="form-input"
+                              placeholder="请输入手机号码"
+                              maxLength={11}
+                              autoComplete="off"
+                              value={quickPhone}
+                              onChange={(e) => {
+                                setQuickPhone(e.target.value)
+                                setErrorMessage('')
+                              }}
+                            />
+                          </div>
+                          <div className="form-group">
+                            <label className="form-label">验证码</label>
+                            <div className="form-input-with-button">
+                              <input
+                                type="text"
+                                className="form-input"
+                                placeholder="请输入验证码"
+                                maxLength={6}
+                                autoComplete="one-time-code"
+                                value={quickPhoneCode}
+                                onChange={(e) => {
+                                  setQuickPhoneCode(e.target.value)
+                                  setErrorMessage('')
+                                }}
+                              />
+                              <button
+                                type="button"
+                                className="email-code-btn"
+                                disabled={phoneCountdown.countdown > 0 || !quickPhone.trim()}
+                                onClick={sendPhoneCode}
+                              >
+                                {phoneCountdown.countdown > 0
+                                  ? `${phoneCountdown.countdown}秒后重发`
+                                  : '发送验证码'}
+                              </button>
+                            </div>
+                          </div>
+                          <button type="submit" className="submit-btn" disabled={isSubmitting}>
+                            {isSubmitting && <span className="loading-spinner" />}
+                            {isSubmitting ? '登录中...' : '登录'}
+                          </button>
+                        </form>
+                      )}
+
+                      {/* Email code login */}
+                      <button
+                        type="button"
+                        className="quick-login-btn"
+                        onClick={() => {
+                          setEmailExpanded(!emailExpanded)
+                          setPhoneExpanded(false)
+                          setErrorMessage('')
+                        }}
+                      >
+                        <Mail size={18} />
+                        邮箱验证码登录
+                      </button>
+
+                      {emailExpanded && (
+                        <form onSubmit={handleEmailCodeLogin} className="quick-login-form" noValidate autoComplete="off">
+                          <div className="form-group">
+                            <label className="form-label">邮箱地址</label>
+                            <input
+                              type="email"
+                              className="form-input"
+                              placeholder="请输入邮箱地址"
+                              maxLength={100}
+                              autoComplete="off"
+                              value={quickEmail}
+                              onChange={(e) => {
+                                setQuickEmail(e.target.value)
+                                setErrorMessage('')
+                              }}
+                            />
+                          </div>
+                          <div className="form-group">
+                            <label className="form-label">验证码</label>
+                            <div className="form-input-with-button">
+                              <input
+                                type="text"
+                                className="form-input"
+                                placeholder="请输入验证码"
+                                maxLength={6}
+                                autoComplete="one-time-code"
+                                value={quickEmailCode}
+                                onChange={(e) => {
+                                  setQuickEmailCode(e.target.value)
+                                  setErrorMessage('')
+                                }}
+                              />
+                              <button
+                                type="button"
+                                className="email-code-btn"
+                                disabled={emailCountdown.countdown > 0 || !quickEmail.trim()}
+                                onClick={sendEmailCode}
+                              >
+                                {emailCountdown.countdown > 0
+                                  ? `${emailCountdown.countdown}秒后重发`
+                                  : '发送验证码'}
+                              </button>
+                            </div>
+                          </div>
+                          <button type="submit" className="submit-btn" disabled={isSubmitting}>
+                            {isSubmitting && <span className="loading-spinner" />}
+                            {isSubmitting ? '登录中...' : '登录'}
+                          </button>
+                        </form>
+                      )}
+
+                      {/* Google OAuth */}
+                      <button
+                        type="button"
+                        className="quick-login-btn google-btn"
+                        onClick={() => {
+                          window.location.href = '/oauth2/authorization/google'
+                        }}
+                      >
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
+                          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+                          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                        </svg>
+                        使用 Google 账号登录
+                      </button>
                     </div>
-                  </>
-                )}
+                  )}
 
-                {/* Error message */}
-                {errorMessage && (
-                  <div className="error-tip">
-                    <AlertTriangle size={16} />
-                    {errorMessage}
+                  <div className="auth-switch">
+                    <span className="switch-text">使用密码登录</span>
+                    <button type="button" className="switch-btn" onClick={() => switchToTab('login')}>
+                      账号登录
+                    </button>
                   </div>
-                )}
+                </Tabs.Content>
 
-                {/* Submit */}
-                <button
-                  type="submit"
-                  className="submit-btn"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting && <span className="loading-spinner" />}
-                  {isSubmitting
-                    ? '加载中...'
-                    : isLoginMode
-                      ? '登录'
-                      : '注册'}
-                </button>
-              </form>
+                {/* ========== Tab 3: 注册 ========== */}
+                <Tabs.Content className="auth-tab-content" value="register">
+                  <form onSubmit={handleRegisterSubmit} className="auth-form" noValidate autoComplete="off">
+                    {/* Username */}
+                    <div className="form-group">
+                      <label className="form-label">用户名</label>
+                      <input
+                        type="text"
+                        className="form-input"
+                        placeholder="请输入用户名（3-15位字母数字下划线）"
+                        maxLength={15}
+                        autoComplete="off"
+                        value={regUsername}
+                        onChange={(e) => {
+                          setRegUsername(e.target.value)
+                          setErrorMessage('')
+                        }}
+                      />
+                    </div>
 
-              {/* Switch login/register */}
-              <div className="auth-switch">
-                <span className="switch-text">
-                  {isLoginMode ? '还没有账号？' : '已有账号？'}
-                </span>
-                <button type="button" className="switch-btn" onClick={toggleMode}>
-                  {isLoginMode ? '立即注册' : '立即登录'}
-                </button>
-              </div>
+                    {/* Password */}
+                    <div className="form-group">
+                      <label className="form-label">密码</label>
+                      <input
+                        type="password"
+                        className="form-input"
+                        placeholder="请设置密码（6-20位）"
+                        maxLength={20}
+                        autoComplete="new-password"
+                        value={regPassword}
+                        onChange={(e) => {
+                          setRegPassword(e.target.value)
+                          setErrorMessage('')
+                        }}
+                      />
+                    </div>
 
-              {/* Forgot password (login only, when email enabled) */}
-              {isLoginMode && emailEnabled && (
-                <div className="forgot-password">
-                  <button
-                    type="button"
-                    className="forgot-btn"
-                    onClick={openResetPassword}
-                  >
-                    忘记密码？
-                  </button>
-                </div>
-              )}
+                    {/* Confirm Password */}
+                    <div className="form-group">
+                      <label className="form-label">确认密码</label>
+                      <input
+                        type="password"
+                        className="form-input"
+                        placeholder="请再次输入密码"
+                        maxLength={20}
+                        autoComplete="new-password"
+                        value={regConfirmPassword}
+                        onChange={(e) => {
+                          setRegConfirmPassword(e.target.value)
+                          setErrorMessage('')
+                        }}
+                      />
+                    </div>
+
+                    {/* Error message */}
+                    {errorMessage && (
+                      <div className="error-tip">
+                        <AlertTriangle size={16} />
+                        {errorMessage}
+                      </div>
+                    )}
+
+                    {/* Submit */}
+                    <button type="submit" className="submit-btn" disabled={isSubmitting}>
+                      {isSubmitting && <span className="loading-spinner" />}
+                      {isSubmitting ? '注册中...' : '注册'}
+                    </button>
+                  </form>
+
+                  <div className="auth-switch">
+                    <span className="switch-text">已有账号？</span>
+                    <button type="button" className="switch-btn" onClick={() => switchToTab('login')}>
+                      登录
+                    </button>
+                  </div>
+                </Tabs.Content>
+              </Tabs.Root>
             </div>
           </Dialog.Content>
         </Dialog.Portal>
@@ -616,7 +854,7 @@ export function AuthModal() {
             background: var(--bg-color-primary);
             border-radius: 16px;
             width: 90%;
-            max-width: 400px;
+            max-width: 420px;
             max-height: 90vh;
             overflow-y: auto;
             position: fixed;
@@ -663,7 +901,7 @@ export function AuthModal() {
           }
           .auth-header {
             text-align: center;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
           }
           .auth-title {
             font-size: 24px;
@@ -676,10 +914,48 @@ export function AuthModal() {
             color: var(--text-color-secondary);
             margin: 0;
           }
-          .auth-form {
+
+          /* Tabs */
+          .auth-tabs-root {
             display: flex;
             flex-direction: column;
             gap: 20px;
+          }
+          .auth-tabs-list {
+            display: flex;
+            border-bottom: 2px solid var(--bg-color-secondary);
+            gap: 0;
+          }
+          .auth-tab-trigger {
+            flex: 1;
+            padding: 10px 0;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-color-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+          }
+          .auth-tab-trigger:hover {
+            color: var(--text-color-primary);
+          }
+          .auth-tab-trigger[data-state="active"] {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+            font-weight: 600;
+          }
+          .auth-tab-content {
+            outline: none;
+          }
+
+          /* Forms */
+          .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
           }
           .form-group {
             display: flex;
@@ -747,6 +1023,20 @@ export function AuthModal() {
             cursor: not-allowed;
             transform: none;
           }
+          .back-btn {
+            padding: 10px 24px;
+            background: var(--bg-color-secondary);
+            color: var(--text-color-secondary);
+            border: none;
+            border-radius: 999px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+          }
+          .back-btn:hover {
+            background: var(--bg-color-hover);
+          }
           .loading-spinner {
             width: 16px;
             height: 16px;
@@ -761,7 +1051,7 @@ export function AuthModal() {
           }
           .auth-switch {
             text-align: center;
-            padding-top: 24px;
+            padding-top: 16px;
           }
           .switch-text {
             font-size: 14px;
@@ -821,6 +1111,51 @@ export function AuthModal() {
             opacity: 0.5;
             cursor: not-allowed;
           }
+
+          /* Quick login */
+          .quick-login-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+          }
+          .quick-login-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 24px;
+            border: 1px solid var(--bg-color-secondary);
+            border-radius: 8px;
+            background: var(--bg-color-primary);
+            color: var(--text-color-primary);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+          }
+          .quick-login-btn:hover {
+            border-color: var(--primary-color);
+            background: var(--bg-color-secondary);
+          }
+          .quick-login-btn.google-btn:hover {
+            border-color: #4285F4;
+          }
+          .quick-login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 12px 16px;
+            background: var(--bg-color-secondary);
+            border-radius: 8px;
+          }
+          .bind-notice {
+            font-size: 14px;
+            color: var(--text-color-secondary);
+            text-align: center;
+            margin: 0;
+            line-height: 1.5;
+          }
+
           @media (max-width: 480px) {
             .auth-content {
               padding: 24px;
